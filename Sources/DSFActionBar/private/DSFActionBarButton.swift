@@ -71,6 +71,12 @@ class DSFActionBarButton: NSButton {
 
 	// MARK: - Sizing
 
+	override var intrinsicContentSize: NSSize {
+		var sz = super.intrinsicContentSize
+		sz.width -= 4
+		return sz
+	}
+
 	override var controlSize: NSControl.ControlSize {
 		get {
 			super.controlSize
@@ -112,7 +118,7 @@ class DSFActionBarButton: NSButton {
 	}
 
 	override func updateLayer() {
-		self.buttonLayer.cornerRadius = self.frame.height / 3.0
+		self.buttonLayer.cornerRadius = 4
 	}
 
 	// MARK: - Tracking Area

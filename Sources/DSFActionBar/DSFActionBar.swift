@@ -27,6 +27,13 @@ import AppKit
 @IBDesignable
 public class DSFActionBar: NSView {
 
+	/// If set, the delegate receives callbacks when the items are reordered in the action bar
+	public weak var dragActionDelegate: DSFActionBarDragDelegate? {
+		didSet {
+			self.stack.dragDelegate = (self.dragActionDelegate == nil) ? nil : self
+		}
+	}
+
 	/// The background color for the control
 	@IBInspectable public var backgroundColor: NSColor = .clear {
 		didSet {
@@ -48,6 +55,14 @@ public class DSFActionBar: NSView {
 		}
 	}
 
+	/// Can the item bar be reordered via dragging?
+	@IBInspectable public var canReorder: Bool = false {
+		didSet {
+			self.stack.canReorder = self.canReorder
+		}
+	}
+
+	/// The inset to apply to the items bar
 	public var edgeInsets = NSEdgeInsets() {
 		didSet {
 			self.stack.edgeInsets = self.edgeInsets
@@ -86,6 +101,7 @@ public class DSFActionBar: NSView {
 		}
 	}
 
+	/// The size of the control
 	public var controlSize: NSControl.ControlSize = .small {
 		didSet {
 			self.buttonItems.forEach {
@@ -184,6 +200,7 @@ public class DSFActionBar: NSView {
 		self.stack.addArrangedSubview(button)
 	}
 
+	/// Add a new button item using a target/selector
 	public func add(
 		_ title: String,
 		identifier: NSUserInterfaceItemIdentifier? = nil,
@@ -196,6 +213,7 @@ public class DSFActionBar: NSView {
 		self.stack.addArrangedSubview(button)
 	}
 
+	/// Add a new button item, using a callback block
 	public func add(
 		_ title: String,
 		identifier: NSUserInterfaceItemIdentifier? = nil,
@@ -206,12 +224,11 @@ public class DSFActionBar: NSView {
 		self.stack.addArrangedSubview(button)
 	}
 
-
+	/// Remove an item from the 
 	public func remove(identifier: NSUserInterfaceItemIdentifier) {
-		if let v = self.stack.arrangedSubviews.first(where: { view in
-			view.identifier == identifier
-		}) {
-			self.stack.removeArrangedSubview(v)
+		if let button = self.actionButton(for: identifier) {
+			self.stack.removeArrangedSubview(button)
+			self.stack.needsLayout = true
 		}
 	}
 
@@ -221,7 +238,7 @@ public class DSFActionBar: NSView {
 
 	// MARK: - Private definitions
 
-	lazy var stack: NSStackView = { self.createStack() }()
+	lazy var stack: DraggingStackView = { self.createStack() }()
 	var buttonItems: [DSFActionBarButton] {
 		return self.stack.arrangedSubviews.map { $0 as! DSFActionBarButton }
 	}

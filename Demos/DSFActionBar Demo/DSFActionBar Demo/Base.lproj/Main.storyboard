@@ -762,6 +762,7 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="leftInset">
                                                 <real key="value" value="4"/>
                                             </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="canReorder" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                     </customView>
                                 </subviews>

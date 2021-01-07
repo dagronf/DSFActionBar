@@ -30,6 +30,8 @@ extension DSFActionBar {
 	func setup() {
 		self.translatesAutoresizingMaskIntoConstraints = false
 
+		self.stack.canReorder = self.canReorder
+
 		self.addSubview(self.stack)
 
 		// Constraints for the containing stack
@@ -190,8 +192,8 @@ extension DSFActionBar {
 // MARK: - Stack building
 
 extension DSFActionBar {
-	func createStack() -> NSStackView {
-		let v = NSStackView()
+	func createStack() -> DraggingStackView {
+		let v = DraggingStackView()
 		v.translatesAutoresizingMaskIntoConstraints = false
 		v.orientation = .horizontal
 		v.alignment = .centerY
@@ -199,12 +201,21 @@ extension DSFActionBar {
 		v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(10), for: .horizontal)
 		v.spacing = 0
 		v.detachesHiddenViews = false
+		v.dragDelegate = self
 		return v
 	}
 }
 
 extension DSFActionBar: DSFActionBarProtocol {
 
+}
+
+// MARK: - DraggingStackView reorder events
+
+extension DSFActionBar: DraggingStackViewProtocol {
+	func stackViewDidReorder() {
+		self.dragActionDelegate?.didReorder(self, items: self.allItems)
+	}
 }
 
 #endif

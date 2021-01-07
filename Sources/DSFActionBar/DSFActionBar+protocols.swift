@@ -24,6 +24,10 @@
 
 import AppKit
 
+@objc public protocol DSFActionBarDragDelegate {
+	@objc func didReorder(_ actionBar: DSFActionBar, items: [DSFActionBarItem])
+}
+
 @objc public protocol DSFActionBarItem: NSObjectProtocol {
 
 	/// Is the item disabled?

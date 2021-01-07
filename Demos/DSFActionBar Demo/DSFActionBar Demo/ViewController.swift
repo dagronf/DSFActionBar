@@ -40,9 +40,9 @@ class ViewController: NSViewController {
 
 		self.actionBar2.controlSize = .regular
 
-		self.actionBar2.add("first item", block: { Swift.print("first item selected ") })
-		self.actionBar2.add("second item", block: { Swift.print("second item selected ") })
-		self.actionBar2.add("third item", block: { Swift.print("third item selected ") })
+		self.actionBar2.add("first item") { Swift.print("first item selected ") }
+		self.actionBar2.add("second item") { Swift.print("second item selected ") }
+		self.actionBar2.add("third item") { Swift.print("third item selected ") }
 
 
 	}
