@@ -17,6 +17,18 @@ public class DSFActionBar: NSView {
 		}
 	}
 
+	@IBInspectable public var moreButtonTooltip: String = NSLocalizedString("More actions…", comment: "Tooltip for the button that appears when there isn't enough space to display all action buttons") {
+		didSet {
+			self.moreButton.toolTip = self.moreButtonTooltip
+		}
+	}
+
+	@IBInspectable public var centered: Bool = false {
+		didSet {
+
+		}
+	}
+
 	public var edgeInsets = NSEdgeInsets() {
 		didSet {
 			self.stack.edgeInsets = self.edgeInsets
@@ -98,6 +110,8 @@ public class DSFActionBar: NSView {
 		]
 		self.addConstraints(constraints)
 
+		// Constraints for the 'more' button
+
 		self.addSubview(self.moreButton)
 		let constraints2 = [
 			NSLayoutConstraint(item: self.moreButton, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0),
@@ -107,6 +121,9 @@ public class DSFActionBar: NSView {
 			NSLayoutConstraint(item: self.moreButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 16),
 		]
 		self.addConstraints(constraints2)
+
+		self.moreButton.toolTip = self.moreButtonTooltip
+
 	}
 
 	public func add(_ title: String,
