@@ -24,17 +24,19 @@
 
 import AppKit
 
+internal let DefaultMoreTooltip = NSLocalizedString("More actions…", comment: "Tooltip for the button that appears when there isn't enough space to display all action buttons")
+
 @IBDesignable
 public class DSFActionBar: NSView {
 
 	/// If set, the delegate receives callbacks when the items are reordered in the action bar
-	public weak var dragActionDelegate: DSFActionBarDragDelegate? {
+	public weak var actionDelegate: DSFActionBarDelegate? {
 		didSet {
-			self.stack.dragDelegate = (self.dragActionDelegate == nil) ? nil : self
+			self.stack.dragDelegate = (self.actionDelegate == nil) ? nil : self
 		}
 	}
 
-	/// The background color for the control
+	/// The background color for the control (defaults to clear)
 	@IBInspectable public var backgroundColor: NSColor = .clear {
 		didSet {
 			self.needsDisplay = true
@@ -42,7 +44,7 @@ public class DSFActionBar: NSView {
 	}
 
 	/// Tooltip to display on the 'more items' button that appears when the items are clipped
-	@IBInspectable public var moreButtonTooltip: String = NSLocalizedString("More actions…", comment: "Tooltip for the button that appears when there isn't enough space to display all action buttons") {
+	@IBInspectable public var moreButtonTooltip: String = DefaultMoreTooltip {
 		didSet {
 			self.moreButton.toolTip = self.moreButtonTooltip
 		}
@@ -124,73 +126,36 @@ public class DSFActionBar: NSView {
 		self.setup()
 	}
 
-	// MARK: Display and layout
-
-	override public func viewDidMoveToWindow() {
-		super.viewDidMoveToWindow()
-		self.configurePosition()
-	}
-
-	public override func draw(_ dirtyRect: NSRect) {
-		self.backgroundColor.setFill()
-		self.bounds.fill()
-	}
-
-	override public func layout() {
-		super.layout()
-
-		var b = self.bounds
-		b.size.width -= 12
-		self.buttonItems.forEach { item in
-			item.isHidden = !b.contains(item.frame)
-		}
-
-		self.moreButton.isHidden = self.buttonItems.first(where: { item in
-			item.isHidden
-		}) == nil ? true : false
+	deinit {
+		self.actionDelegate = nil
 	}
 
 	// MARK: Item Discovery
 
+	/// Return all the items in the order they are presented left-to-right within the action bar
+	@objc public var items: [DSFActionBarItem] {
+		return self.buttonItems
+	}
+
+	/// The number of items in the action bar
+	@inlinable @objc public var itemCount: Int {
+		return self.items.count
+	}
+
 	/// Return an item that matches the provided identifier
-	public func item(for identifier: NSUserInterfaceItemIdentifier) -> DSFActionBarItem? {
+	@objc public func item(for identifier: NSUserInterfaceItemIdentifier) -> DSFActionBarItem? {
 		return self.actionButton(for: identifier)
 	}
 
-	private func actionButton(for identifier: NSUserInterfaceItemIdentifier) -> DSFActionBarButton? {
-		let first = self.stack.arrangedSubviews.first(where: { view in view.identifier == identifier })
-		if let v = first, let b = v as? DSFActionBarButton {
-			return b
-		}
-		return nil
-	}
-
-	public var allItems: [DSFActionBarItem] {
-		return self.buttonItems.map { $0 as DSFActionBarItem }
+	/// Returns the item at the specified index.  If the index is out of range, returns nil
+	@objc public func item(index: Int) -> DSFActionBarItem? {
+		return self.actionButton(index: index)
 	}
 
 	// MARK: Add items
 
-	private func createButton(_ title: String, _ identifier: NSUserInterfaceItemIdentifier?) -> DSFActionBarButton {
-		let button = DSFActionBarButton(frame: NSZeroRect)
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.title = title
-		button.identifier = identifier
-		button.bezelStyle = .shadowlessSquare
-
-		button.action = nil
-		button.target = nil
-		button.actionBlock = nil
-		button.menu = nil
-
-		button.parent = self
-		button.controlSize = self.controlSize
-
-		return button
-	}
-
 	/// Add an item with an (optional) menu
-	public func add(
+	@objc public func add(
 		_ title: String,
 		identifier: NSUserInterfaceItemIdentifier? = nil,
 		menu: NSMenu? = nil)
@@ -201,7 +166,7 @@ public class DSFActionBar: NSView {
 	}
 
 	/// Add a new button item using a target/selector
-	public func add(
+	@objc public func add(
 		_ title: String,
 		identifier: NSUserInterfaceItemIdentifier? = nil,
 		target: AnyObject,
@@ -214,7 +179,7 @@ public class DSFActionBar: NSView {
 	}
 
 	/// Add a new button item, using a callback block
-	public func add(
+	@objc public func add(
 		_ title: String,
 		identifier: NSUserInterfaceItemIdentifier? = nil,
 		block: @escaping () -> Void)
@@ -224,24 +189,45 @@ public class DSFActionBar: NSView {
 		self.stack.addArrangedSubview(button)
 	}
 
-	/// Remove an item from the 
-	public func remove(identifier: NSUserInterfaceItemIdentifier) {
+	// MARK: Remove items
+
+	/// Remove a item from the action bar
+	@objc public func remove(item: DSFActionBarItem) -> Bool {
+		if let itemButton = item as? DSFActionBarButton {
+			self.stack.removeArrangedSubview(itemButton)
+			return true
+		}
+		else {
+			return false
+		}
+	}
+
+	/// Remove an item from the action bar using the identifier
+	@objc public func remove(identifier: NSUserInterfaceItemIdentifier) {
 		if let button = self.actionButton(for: identifier) {
 			self.stack.removeArrangedSubview(button)
 			self.stack.needsLayout = true
 		}
 	}
 
-	public func removeAll() {
+	/// Remove all the items from the action bar
+	@objc public func removeAll() {
 		self.stack.arrangedSubviews.forEach { self.stack.removeArrangedSubview($0) }
+		self.stack.needsLayout = true
 	}
 
 	// MARK: - Private definitions
 
-	lazy var stack: DraggingStackView = { self.createStack() }()
+	lazy var stack: DraggingStackView = {
+		self.createStack()
+	}()
+
+	/// The arranged items in the stack as Action Bar Buttons
 	var buttonItems: [DSFActionBarButton] {
 		return self.stack.arrangedSubviews.map { $0 as! DSFActionBarButton }
 	}
+
+	/// The 'More Items' button
 	lazy var moreButton: NSButton = {
 		return self.createMoreButton()
 	}()

@@ -24,9 +24,19 @@
 
 import AppKit
 
+// Internal protocol for the button to ask or provide information to the action bar
+internal protocol DSFActionBarProtocol {
+	// Retrieve the current position (in Action Bar coordinates) of the specified iten
+	func rect(for child: DSFActionBarButton) -> CGRect
+	// Notify the bar that the user right-clicked on a bar item
+	func rightClick(for child: DSFActionBarButton)
+	// Returns the current background color set for the bar
+	var backgroundColor: NSColor { get }
+}
+
 // MARK: Setup
 
-extension DSFActionBar {
+internal extension DSFActionBar {
 	func setup() {
 		self.translatesAutoresizingMaskIntoConstraints = false
 
@@ -50,12 +60,55 @@ extension DSFActionBar {
 
 		self.moreButton.toolTip = self.moreButtonTooltip
 	}
+
+	func actionButton(for identifier: NSUserInterfaceItemIdentifier) -> DSFActionBarButton? {
+		let first = self.stack.arrangedSubviews.first(where: { view in view.identifier == identifier })
+		if let v = first, let b = v as? DSFActionBarButton {
+			return b
+		}
+		return nil
+	}
+
+	func actionButton(index: Int) -> DSFActionBarButton? {
+		guard index >= 0, index < self.stack.arrangedSubviews.count else {
+			return nil
+		}
+		return self.stack.arrangedSubviews[index] as? DSFActionBarButton
+	}
+}
+
+// MARK: Display and layout
+
+public extension DSFActionBar {
+	override func viewDidMoveToWindow() {
+		super.viewDidMoveToWindow()
+		self.configurePosition()
+	}
+
+	override func draw(_: NSRect) {
+		self.backgroundColor.setFill()
+		self.bounds.fill()
+	}
+
+	override func layout() {
+		super.layout()
+
+		var b = self.bounds
+		b.size.width -= 12
+		self.buttonItems.forEach { item in
+			item.isHidden = !b.contains(item.frame)
+		}
+
+		self.moreButton.isHidden = self.buttonItems.first(where: { item in
+			item.isHidden
+		}) == nil ? true : false
+	}
 }
 
 // MARK: Item positioning
 
 extension DSFActionBar {
-	func configurePosition() {
+	internal func configurePosition() {
 		if self.centered {
 			self.configureCentered()
 		}
@@ -105,7 +158,7 @@ extension DSFActionBar {
 
 extension DSFActionBar {
 	@objc func showButton(_ sender: NSButton) {
-		let hiddenControls: [NSMenuItem] = self.allItems.compactMap { control in
+		let hiddenControls: [NSMenuItem] = self.items.compactMap { control in
 
 			guard control.isHidden else {
 				return nil
@@ -148,8 +201,7 @@ public extension DSFActionBar {
 
 // MARK: - 'More items' button definitions
 
-extension DSFActionBar {
-
+internal extension DSFActionBar {
 	func createMoreButton() -> NSButton {
 		let moreButton = NSButton()
 		moreButton.translatesAutoresizingMaskIntoConstraints = false
@@ -191,7 +243,7 @@ extension DSFActionBar {
 
 // MARK: - Stack building
 
-extension DSFActionBar {
+internal extension DSFActionBar {
 	func createStack() -> DraggingStackView {
 		let v = DraggingStackView()
 		v.translatesAutoresizingMaskIntoConstraints = false
@@ -204,19 +256,47 @@ extension DSFActionBar {
 		v.dragDelegate = self
 		return v
 	}
+
+	func createButton(_ title: String, _ identifier: NSUserInterfaceItemIdentifier?) -> DSFActionBarButton {
+		let button = DSFActionBarButton(frame: NSZeroRect)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		button.title = title
+		button.identifier = identifier
+		button.bezelStyle = .shadowlessSquare
+
+		button.action = nil
+		button.target = nil
+		button.actionBlock = nil
+		button.menu = nil
+
+		button.parent = self
+		button.controlSize = self.controlSize
+
+		return button
+	}
 }
 
 extension DSFActionBar: DSFActionBarProtocol {
+	func rect(for child: DSFActionBarButton) -> CGRect {
+		if child.isHidden {
+			/// If the child is hidden, it won't be visible in the UI.
+			return .zero
+		}
+		let pos = child.convert(child.bounds, to: self)
+		return pos
+	}
 
+	func rightClick(for child: DSFActionBarButton) {
+		self.actionDelegate?.actionBar?(self, didRightClickOnItem: child)
+	}
 }
 
 // MARK: - DraggingStackView reorder events
 
 extension DSFActionBar: DraggingStackViewProtocol {
 	func stackViewDidReorder() {
-		self.dragActionDelegate?.didReorder(self, items: self.allItems)
+		self.actionDelegate?.actionBar?(self, didReorderItems: self.items)
 	}
 }
 
 #endif
-

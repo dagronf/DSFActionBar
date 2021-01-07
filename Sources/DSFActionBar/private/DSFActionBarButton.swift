@@ -202,9 +202,19 @@ class DSFActionBarButton: NSButton {
 		}
 		self.mouseIsDown = false
 	}
+
+	override func rightMouseDown(with event: NSEvent) {
+		self.parent?.rightClick(for: self)
+	}
+
 }
 
 extension DSFActionBarButton: DSFActionBarItem {
+
+	var position: CGRect {
+		return self.parent.rect(for: self)
+	}
+
 	override var menu: NSMenu? {
 		get {
 			super.menu

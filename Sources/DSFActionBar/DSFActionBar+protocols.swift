@@ -24,20 +24,28 @@
 
 import AppKit
 
-@objc public protocol DSFActionBarDragDelegate {
-	@objc func didReorder(_ actionBar: DSFActionBar, items: [DSFActionBarItem])
+/// ActionBar delegate callbacks
+@objc public protocol DSFActionBarDelegate {
+	/// Callback when the items within an action bar reordered
+	@objc optional func actionBar(_ actionBar: DSFActionBar, didReorderItems: [DSFActionBarItem])
+
+	/// Callback when an item is right-clicked on
+	@objc optional func actionBar(_ actionBar: DSFActionBar, didRightClickOnItem item: DSFActionBarItem)
 }
 
-@objc public protocol DSFActionBarItem: NSObjectProtocol {
+/// An ActionBar item
+@objc public protocol DSFActionBarItem {
+	/// The item's title
+	var title: String { get set }
 
 	/// Is the item disabled?
 	var disabled: Bool { get set }
 
-	/// Is the item hidden or not?
-	var isHidden: Bool { get }
+	/// The current position of the item (in DSFActionBar coordinates)
+	var position: CGRect { get }
 
-	/// The item's title
-	var title: String { get set }
+	/// Is the item currently hidden (ie. only available in the menu)
+	var isHidden: Bool { get }
 
 	/// The item's identifier
 	var identifier: NSUserInterfaceItemIdentifier? { get }
@@ -54,10 +62,6 @@ import AppKit
 
 	/// Block handling
 	var actionBlock: (() -> Void)? { get set }
-}
-
-protocol DSFActionBarProtocol {
-	var backgroundColor: NSColor { get }
 }
 
 #endif

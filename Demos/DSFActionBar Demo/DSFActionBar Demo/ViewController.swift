@@ -22,6 +22,8 @@ class ViewController: NSViewController {
 
 		// Do any additional setup after loading the view.
 
+		self.actionBar1.actionDelegate = self
+
 		self.actionBar1.add("Jobs", target: self, action: #selector(self.jobItem(_:)))
 
 		self.actionBar1.add("Caterpillar", identifier: CaterpillarIdentifier, target: self, action: #selector(self.caterpillarItem(_:)))
@@ -75,6 +77,18 @@ class ViewController: NSViewController {
 
 	@objc func jobItem(_: Any) {
 		Swift.print("job selected!")
+
+		guard let r = self.actionBar1.item(for: CaterpillarIdentifier)?.position else {
+			fatalError()
+		}
+
+		Swift.print("Caterpillar button is located at \(r) within first action bar")
+
+		// Overlay something (like a text field for renaming)
+		//	let b = NSTextField(frame: r!)
+		//	self.actionBar1.addSubview(b)
+		//	self.view.window?.makeFirstResponder(b)
+
 	}
 
 	@objc func caterpillarItem(_: Any) {
@@ -98,4 +112,16 @@ class ViewController: NSViewController {
 			// Update the view, if already loaded.
 		}
 	}
+}
+
+extension ViewController: DSFActionBarDelegate {
+	func actionBar(_ actionBar: DSFActionBar, didReorderItems: [DSFActionBarItem]) {
+		
+	}
+
+	func actionBar(_ actionBar: DSFActionBar, didRightClickOnItem item: DSFActionBarItem) {
+		Swift.print("Did right-click on item '\(item.title)'")
+	}
+
+
 }
