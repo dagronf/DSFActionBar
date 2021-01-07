@@ -782,7 +782,7 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="ukh-3U-XUw" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="U5s-Bn-gec"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ukh-3U-XUw" secondAttribute="bottom" constant="192" id="ZSv-4x-MOW"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ukh-3U-XUw" secondAttribute="bottom" constant="20" symbolic="YES" id="ZSv-4x-MOW"/>
                             <constraint firstItem="ukh-3U-XUw" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="ilD-y3-3TG"/>
                             <constraint firstAttribute="trailing" secondItem="ukh-3U-XUw" secondAttribute="trailing" id="vaZ-Z1-hwc"/>
                         </constraints>
