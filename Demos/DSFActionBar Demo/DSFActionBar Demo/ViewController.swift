@@ -12,6 +12,9 @@ class ViewController: NSViewController {
 	@IBOutlet var actionBar1: DSFActionBar!
 	@IBOutlet var actionBar2: DSFActionBar!
 
+	@IBOutlet weak var actionTabBar1: DSFActionTabBar!
+
+
 	let CaterpillarIdentifier = NSUserInterfaceItemIdentifier("caterpillar")
 	let FishieIdentifier = NSUserInterfaceItemIdentifier("fishie")
 
@@ -54,6 +57,14 @@ class ViewController: NSViewController {
 			Swift.print("third item selected ")
 		}
 
+		self.actionTabBar1.actionTabDelegate = self
+
+		self.actionTabBar1.add("All Items")
+		self.actionTabBar1.add("Passwords")
+		self.actionTabBar1.add("Secure Notes")
+		self.actionTabBar1.add("My Certificates")
+		self.actionTabBar1.add("Keys")
+		self.actionTabBar1.add("Certificates")
 	}
 
 	@objc func toggle(_ sender: AnyObject) {
@@ -153,4 +164,10 @@ extension ViewController: DSFActionBarDelegate {
 		Swift.print(" > Open in window selected for '\(item.title)'")
 	}
 
+}
+
+extension ViewController: DSFActionTabBarDelegate {
+	func actionTabBar(_ actionTabBar: DSFActionTabBar, didSelectItem item: DSFActionBarItem, atIndex index: Int) {
+		Swift.print("Selected tab \(index) for item '\(item.title)'")
+	}
 }

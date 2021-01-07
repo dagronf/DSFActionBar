@@ -50,6 +50,9 @@ import AppKit
 	/// The item's identifier
 	var identifier: NSUserInterfaceItemIdentifier? { get }
 
+	/// The item's state
+	var state: NSControl.StateValue { get set }
+
 	/// The menu to be displayed for the item
 	var menu: NSMenu? { get set }
 
@@ -62,6 +65,12 @@ import AppKit
 
 	/// Block handling
 	var actionBlock: (() -> Void)? { get set }
+}
+
+/// ActionBar delegate callbacks
+@objc public protocol DSFActionTabBarDelegate {
+	/// Callback when the items within an action bar reordered
+	@objc optional func actionTabBar(_ actionTabBar: DSFActionTabBar, didSelectItem item: DSFActionBarItem, atIndex index: Int)
 }
 
 #endif

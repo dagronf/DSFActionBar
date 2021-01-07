@@ -48,7 +48,7 @@ class DSFActionBarButton: NSButton {
 		self.setup()
 	}
 
-	private func setup() {
+	@objc private func setup() {
 		self.translatesAutoresizingMaskIntoConstraints = false
 		self.wantsLayer = true
 	}
@@ -120,6 +120,21 @@ class DSFActionBarButton: NSButton {
 		self.buttonLayer.cornerRadius = 4
 	}
 
+	override var state: NSControl.StateValue {
+		get {
+			return super.state
+		}
+		set {
+			super.state = newValue
+			if (newValue == .on) {
+				self.buttonLayer.backgroundColor = self.activeColor.cgColor
+			}
+			else {
+				self.buttonLayer.backgroundColor = nil
+			}
+		}
+	}
+
 	// MARK: - Tracking Area
 
 	private var trackingArea: NSTrackingArea?
@@ -156,6 +171,13 @@ class DSFActionBarButton: NSButton {
 
 	var pressedColor: NSColor {
 		return UsingEffectiveAppearance(of: self) {
+			let hc = parent.backgroundColor.flatContrastColor().withAlphaComponent(0.25)
+			return hc
+		}
+	}
+
+	var activeColor: NSColor {
+		return UsingEffectiveAppearance(of: self) {
 			let hc = parent.backgroundColor.flatContrastColor().withAlphaComponent(0.2)
 			return hc
 		}
@@ -164,7 +186,11 @@ class DSFActionBarButton: NSButton {
 	override func mouseEntered(with _: NSEvent) {
 		guard self.isEnabled else { return }
 		// Highlight with quaternary label color
-		if self.mouseIsDown {
+
+		if (self.state == .on) {
+			self.buttonLayer.backgroundColor = self.activeColor.cgColor
+		}
+		else if self.mouseIsDown {
 			self.buttonLayer.backgroundColor = self.pressedColor.cgColor
 		}
 		else {
@@ -174,7 +200,13 @@ class DSFActionBarButton: NSButton {
 	}
 
 	override func mouseExited(with _: NSEvent) {
-		self.buttonLayer.backgroundColor = nil
+
+		if (self.state == .on) {
+			self.buttonLayer.backgroundColor = self.activeColor.cgColor
+		}
+		else {
+			self.buttonLayer.backgroundColor = nil
+		}
 		self.mouseInside = false
 	}
 
@@ -216,6 +248,11 @@ class DSFActionBarButton: NSButton {
 		else {
 			self.buttonLayer.backgroundColor = nil
 		}
+
+		if (self.state == .on) {
+			self.buttonLayer.backgroundColor = self.pressedColor.cgColor
+		}
+
 		self.mouseIsDown = false
 	}
 

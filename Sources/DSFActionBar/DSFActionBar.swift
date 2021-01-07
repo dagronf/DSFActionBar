@@ -156,35 +156,49 @@ public class DSFActionBar: NSView {
 		return self.actionButton(index: index)
 	}
 
+	/// Returns the item with the specified title.  If there are multiple, returns the first one
+	@objc public func item(title: String) -> DSFActionBarItem? {
+		return self.buttonItems.first(where: { button in button.title == title })
+	}
+
 	// MARK: Add item
 
 	/// Add an item with an (optional) menu
+	@discardableResult
 	@objc public func add(_ title: String,
 						  identifier: NSUserInterfaceItemIdentifier? = nil,
-						  menu: NSMenu? = nil) {
+						  menu: NSMenu? = nil) -> DSFActionBarItem {
 		let button = self.createButton(title, identifier)
 		button.menu = menu
 		self.stack.addArrangedSubview(button)
+		self.updateTags()
+		return button
 	}
 
 	/// Add a new button item using a target/selector
+	@discardableResult
 	@objc public func add(_ title: String,
 						  identifier: NSUserInterfaceItemIdentifier? = nil,
 						  target: AnyObject,
-						  action: Selector) {
+						  action: Selector) -> DSFActionBarItem {
 		let button = self.createButton(title, identifier)
 		button.action = action
 		button.target = target
 		self.stack.addArrangedSubview(button)
+		self.updateTags()
+		return button
 	}
 
 	/// Add a new button item, using a callback block
+	@discardableResult
 	@objc public func add(_ title: String,
 						  identifier: NSUserInterfaceItemIdentifier? = nil,
-						  block: @escaping () -> Void) {
+						  block: @escaping () -> Void) -> DSFActionBarItem {
 		let button = self.createButton(title, identifier)
 		button.actionBlock = block
 		self.stack.addArrangedSubview(button)
+		self.updateTags()
+		return button
 	}
 
 	// MARK: Insert item
@@ -196,6 +210,7 @@ public class DSFActionBar: NSView {
 	{
 		let button = self.createButton(title, identifier)
 		self.stack.insertArrangedSubview(button, at: index)
+		self.updateTags()
 		return button
 	}
 
@@ -205,6 +220,7 @@ public class DSFActionBar: NSView {
 	@objc public func remove(item: DSFActionBarItem) -> Bool {
 		if let itemButton = item as? DSFActionBarButton {
 			self.stack.removeArrangedSubview(itemButton)
+			self.updateTags()
 			return true
 		}
 		else {
@@ -217,6 +233,7 @@ public class DSFActionBar: NSView {
 		if let button = self.actionButton(for: identifier) {
 			self.stack.removeArrangedSubview(button)
 			self.stack.needsLayout = true
+			self.updateTags()
 		}
 	}
 

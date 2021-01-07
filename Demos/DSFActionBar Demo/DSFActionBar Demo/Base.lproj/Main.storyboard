@@ -711,10 +711,10 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ukh-3U-XUw">
-                                <rect key="frame" x="0.0" y="192" width="480" height="144"/>
+                                <rect key="frame" x="0.0" y="123" width="480" height="213"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lVr-ej-9al">
-                                        <rect key="frame" x="6" y="112" width="90" height="24"/>
+                                        <rect key="frame" x="6" y="181" width="90" height="24"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Centered" id="BQE-98-oqX">
                                             <font key="font" metaFont="systemSemibold" size="20"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -722,7 +722,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <customView placeholderIntrinsicWidth="480" placeholderIntrinsicHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="89X-XX-krb" customClass="DSFActionBar" customModule="DSFActionBar">
-                                        <rect key="frame" x="0.0" y="77" width="480" height="25"/>
+                                        <rect key="frame" x="0.0" y="146" width="480" height="25"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="topInset">
                                                 <real key="value" value="4"/>
@@ -740,7 +740,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </customView>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="12h-Hf-ywu" userLabel="Left Aligned">
-                                        <rect key="frame" x="6" y="43" width="115" height="24"/>
+                                        <rect key="frame" x="6" y="112" width="115" height="24"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Left Aligned" id="kyx-1N-KIb">
                                             <font key="font" metaFont="systemSemibold" size="20"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -748,7 +748,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <customView placeholderIntrinsicWidth="480" placeholderIntrinsicHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="1ut-a5-EdD" customClass="DSFActionBar" customModule="DSFActionBar">
-                                        <rect key="frame" x="0.0" y="8" width="480" height="25"/>
+                                        <rect key="frame" x="0.0" y="77" width="480" height="25"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="topInset">
                                                 <real key="value" value="4"/>
@@ -765,6 +765,29 @@
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="canReorder" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                     </customView>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XYO-8a-Ohe">
+                                        <rect key="frame" x="6" y="43" width="73" height="24"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Tab Bar" id="q8i-oQ-Wjj">
+                                            <font key="font" metaFont="systemSemibold" size="20"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <customView placeholderIntrinsicWidth="480" placeholderIntrinsicHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="6a6-eT-hxX" customClass="DSFActionTabBar" customModule="DSFActionBar">
+                                        <rect key="frame" x="0.0" y="8" width="480" height="25"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="topInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="bottomInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leftInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="canReorder" value="NO"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
                                 </subviews>
                                 <edgeInsets key="edgeInsets" left="8" right="8" top="8" bottom="8"/>
                                 <visibilityPriorities>
@@ -772,8 +795,12 @@
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
@@ -791,6 +818,7 @@
                     <connections>
                         <outlet property="actionBar1" destination="89X-XX-krb" id="73I-tN-VxT"/>
                         <outlet property="actionBar2" destination="1ut-a5-EdD" id="cbg-QW-gbP"/>
+                        <outlet property="actionTabBar1" destination="6a6-eT-hxX" id="uBp-DJ-RRU"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

@@ -164,13 +164,16 @@ extension DSFActionBar {
 				return nil
 			}
 
-			let a = (control.disabled == false) ? control.action : nil
+			// If the control is disabled, set the action to nil to disable the menu item
+			let action = (control.disabled == false) ? #selector(menuSelected(_:)) : nil
 
 			let mu = NSMenuItem(title: control.title,
-								action: a,
+								action: action,
 								keyEquivalent: "")
-			mu.target = control.target
+			mu.target = self
 			mu.isEnabled = (control.disabled == false)
+			mu.state = control.state
+			mu.representedObject = control
 
 			if let menu = control.menu {
 				mu.submenu = menu
@@ -184,6 +187,21 @@ extension DSFActionBar {
 
 		menu.popUp(positioning: nil, at: NSPoint(x: sender.frame.minX, y: sender.frame.minY), in: self)
 	}
+
+	@objc func menuSelected(_ sender: NSMenuItem) {
+		guard let control = sender.representedObject as? DSFActionBarButton,
+			  let c = control.cell as? NSButtonCell else {
+			fatalError("Unexpected control type in action bar")
+		}
+
+		if c.type.rawValue == NSButton.ButtonType.toggle.rawValue {
+			control.state = .on
+		}
+
+		// Force the action
+		_ = control.target?.perform(control.action, with: control)
+	}
+
 }
 
 // MARK: - Interface builder support
@@ -244,6 +262,11 @@ internal extension DSFActionBar {
 // MARK: - Stack building
 
 internal extension DSFActionBar {
+
+	func updateTags() {
+		self.buttonItems.enumerated().forEach { $0.element.tag = $0.offset }
+	}
+
 	func createStack() -> DraggingStackView {
 		let v = DraggingStackView()
 		v.translatesAutoresizingMaskIntoConstraints = false
@@ -295,6 +318,7 @@ extension DSFActionBar: DSFActionBarProtocol {
 
 extension DSFActionBar: DraggingStackViewProtocol {
 	func stackViewDidReorder() {
+		self.updateTags()
 		self.actionDelegate?.actionBar?(self, didReorderItems: self.items)
 	}
 }
