@@ -31,9 +31,14 @@ class ViewController: NSViewController {
 
 		self.actionBar1.add("Womble", menu: m)
 
+
+		self.actionBar2.controlSize = .small
+
 		self.actionBar2.add("first item")
 		self.actionBar2.add("second item")
 		self.actionBar2.add("third item")
+
+
 	}
 
 	@objc func toggle(_: Any) {

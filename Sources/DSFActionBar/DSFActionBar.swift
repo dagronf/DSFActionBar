@@ -25,7 +25,7 @@ public class DSFActionBar: NSView {
 
 	@IBInspectable public var centered: Bool = false {
 		didSet {
-
+			self.configurePosition()
 		}
 	}
 
@@ -67,8 +67,18 @@ public class DSFActionBar: NSView {
 		}
 	}
 
+	public var controlSize: NSControl.ControlSize = .regular {
+		didSet {
+			self.items.forEach {
+				$0.controlSize = self.controlSize
+				$0.needsLayout = true
+			}
+			self.needsLayout = true
+		}
+	}
+
 	private lazy var stack: NSStackView = { self.createStack() }()
-	public private(set) var items: [NSView] = []
+	var items: [NSButton] = []
 
 	lazy var moreButton: NSButton = {
 		let moreButton = NSButton()
@@ -120,13 +130,13 @@ public class DSFActionBar: NSView {
 		self.moreButton.toolTip = self.moreButtonTooltip
 	}
 
-	public override func viewDidMoveToWindow() {
+	override public func viewDidMoveToWindow() {
 		super.viewDidMoveToWindow()
 
 		self.configurePosition()
 	}
 
-	// MARK :- Positions
+	// MARK: - Positions
 
 	private var lastC: [NSLayoutConstraint] = []
 
@@ -140,7 +150,7 @@ public class DSFActionBar: NSView {
 	}
 
 	private func configureLeft() {
-		self.removeConstraints(lastC)
+		self.removeConstraints(self.lastC)
 
 		let r = NSLayoutConstraint(item: self.stack, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
 		r.priority = NSLayoutConstraint.Priority(10)
@@ -149,7 +159,7 @@ public class DSFActionBar: NSView {
 			NSLayoutConstraint(item: self.stack, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0),
 			NSLayoutConstraint(item: self.stack, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0),
 			NSLayoutConstraint(item: self.stack, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0),
-			r
+			r,
 		]
 		self.addConstraints(constraints)
 		self.lastC = constraints
@@ -157,7 +167,7 @@ public class DSFActionBar: NSView {
 	}
 
 	private func configureCentered() {
-		self.removeConstraints(lastC)
+		self.removeConstraints(self.lastC)
 
 		let r = NSLayoutConstraint(item: self.stack, attribute: .left, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .left, multiplier: 1, constant: 0)
 
@@ -168,7 +178,7 @@ public class DSFActionBar: NSView {
 			c,
 			NSLayoutConstraint(item: self.stack, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0),
 			NSLayoutConstraint(item: self.stack, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0),
-			r
+			r,
 		]
 		self.addConstraints(constraints)
 		self.lastC = constraints
@@ -185,6 +195,7 @@ public class DSFActionBar: NSView {
 		button.bezelStyle = .roundRect
 		button.identifier = identifier
 		button.menu = menu
+		button.controlSize = self.controlSize
 
 		self.stack.addArrangedSubview(button)
 		self.items.append(button)
@@ -235,6 +246,7 @@ public class DSFActionBar: NSView {
 		button.identifier = identifier
 		button.action = action
 		button.target = target
+		button.controlSize = self.controlSize
 
 		self.stack.addArrangedSubview(button)
 		self.items.append(button)
@@ -288,7 +300,7 @@ public class DSFActionBar: NSView {
 
 			return mu
 		}
-
+		
 		let menu = NSMenu()
 		menu.items = hiddenControls
 
