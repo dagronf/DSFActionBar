@@ -86,7 +86,7 @@ public class DSFActionBar: NSView {
 		}
 	}
 
-	public var controlSize: NSControl.ControlSize = .regular {
+	public var controlSize: NSControl.ControlSize = .small {
 		didSet {
 			self.buttonItems.forEach {
 				$0.controlSize = self.controlSize
@@ -155,22 +155,32 @@ public class DSFActionBar: NSView {
 
 	// MARK: Add items
 
+	private func createButton(_ title: String, _ identifier: NSUserInterfaceItemIdentifier?) -> DSFActionBarButton {
+		let button = DSFActionBarButton(frame: NSZeroRect)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		button.title = title
+		button.identifier = identifier
+		button.bezelStyle = .shadowlessSquare
+
+		button.action = nil
+		button.target = nil
+		button.actionBlock = nil
+		button.menu = nil
+
+		button.parent = self
+		button.controlSize = self.controlSize
+
+		return button
+	}
+
 	/// Add an item with an (optional) menu
 	public func add(
 		_ title: String,
 		identifier: NSUserInterfaceItemIdentifier? = nil,
 		menu: NSMenu? = nil)
 	{
-		let button = DSFActionBarButton(frame: NSZeroRect)
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.title = title
-		button.bezelStyle = .roundRect
-		button.identifier = identifier
+		let button = self.createButton(title, identifier)
 		button.menu = menu
-		button.actionBlock = nil
-		button.controlSize = self.controlSize
-		button.parent = self
-
 		self.stack.addArrangedSubview(button)
 	}
 
@@ -180,17 +190,9 @@ public class DSFActionBar: NSView {
 		target: AnyObject,
 		action: Selector)
 	{
-		let button = DSFActionBarButton(frame: NSZeroRect)
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.title = title
-		button.bezelStyle = .roundRect
-		button.identifier = identifier
+		let button = self.createButton(title, identifier)
 		button.action = action
 		button.target = target
-		button.actionBlock = nil
-		button.controlSize = self.controlSize
-		button.parent = self
-
 		self.stack.addArrangedSubview(button)
 	}
 
@@ -199,17 +201,8 @@ public class DSFActionBar: NSView {
 		identifier: NSUserInterfaceItemIdentifier? = nil,
 		block: @escaping () -> Void)
 	{
-		let button = DSFActionBarButton(frame: NSZeroRect)
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.title = title
-		button.bezelStyle = .roundRect
-		button.identifier = identifier
-		button.action = nil
-		button.target = nil
+		let button = self.createButton(title, identifier)
 		button.actionBlock = block
-		button.controlSize = self.controlSize
-		button.parent = self
-
 		self.stack.addArrangedSubview(button)
 	}
 

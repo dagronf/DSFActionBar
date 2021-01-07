@@ -38,8 +38,7 @@ class ViewController: NSViewController {
 
 		self.actionBar1.add("Womble", menu: m)
 
-
-		self.actionBar2.controlSize = .small
+		self.actionBar2.controlSize = .regular
 
 		self.actionBar2.add("first item", block: { Swift.print("first item selected ") })
 		self.actionBar2.add("second item", block: { Swift.print("second item selected ") })

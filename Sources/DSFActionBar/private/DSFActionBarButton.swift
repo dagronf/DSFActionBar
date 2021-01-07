@@ -50,11 +50,8 @@ class DSFActionBarButton: NSButton {
 	}
 
 	private func setup() {
+		self.translatesAutoresizingMaskIntoConstraints = false
 		self.wantsLayer = true
-	}
-
-	override open var wantsUpdateLayer: Bool {
-		return true
 	}
 
 	private lazy var buttonLayer: CALayer = {
@@ -74,13 +71,21 @@ class DSFActionBarButton: NSButton {
 
 	// MARK: - Sizing
 
-	override var intrinsicContentSize: NSSize {
-		var sz = super.intrinsicContentSize
-		sz.width -= 4
-		//sz.height += 2
-		return sz
+	override var controlSize: NSControl.ControlSize {
+		get {
+			super.controlSize
+		}
+		set {
+			super.controlSize = newValue
+			self.updateFont()
+		}
 	}
 
+	private func updateFont() {
+		let fs = NSFont.systemFontSize(for: self.controlSize)
+		self.font = NSFont.systemFont(ofSize: fs)
+		self.needsDisplay = true
+	}
 
 	override func viewDidMoveToWindow() {
 		super.viewDidMoveToWindow()
