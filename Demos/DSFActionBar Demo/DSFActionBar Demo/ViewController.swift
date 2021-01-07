@@ -19,10 +19,13 @@ class ViewController: NSViewController {
 
 		// Do any additional setup after loading the view.
 
-		self.actionBar1.add("Jobs", target: self, action: #selector(self.firstItem(_:)))
-		self.actionBar1.add("Caterpillar")
-		self.actionBar1.add("Toggle Fishie", target: self, action: #selector(self.toggle(_:)))
+		self.actionBar1.add("Jobs", target: self, action: #selector(self.jobItem(_:)))
+		self.actionBar1.add("Caterpillar", identifier: NSUserInterfaceItemIdentifier("caterpillar"), target: self, action: #selector(self.caterpillarItem(_:)))
+		self.actionBar1.add("Toggle Some Items", target: self, action: #selector(self.toggle(_:)))
 		self.actionBar1.add("Fishie!", identifier: NSUserInterfaceItemIdentifier("fishie"), target: self, action: #selector(self.fishieItem(_:)))
+
+		self.actionBar1.isEnabled(false, identifier: NSUserInterfaceItemIdentifier("caterpillar"))
+
 
 		let m = NSMenu()
 		m.addItem(withTitle: "first", action: #selector(self.firstItem(_:)), keyEquivalent: "")
@@ -54,10 +57,21 @@ class ViewController: NSViewController {
 		else {
 			self.actionBar1.setAction(#selector(self.fishieItem(_:)), for: self, with: NSUserInterfaceItemIdentifier("fishie"))
 		}
+
+		self.actionBar1.isEnabled(self.toggle, identifier: NSUserInterfaceItemIdentifier("caterpillar"))
+
 	}
 
 	@objc func firstItem(_: Any) {
 		Swift.print("first selected!")
+	}
+
+	@objc func jobItem(_: Any) {
+		Swift.print("job selected!")
+	}
+
+	@objc func caterpillarItem(_: Any) {
+		Swift.print("caterpillar selected!")
 	}
 
 	@objc func secondItem(_: Any) {

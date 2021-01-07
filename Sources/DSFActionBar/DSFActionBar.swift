@@ -201,12 +201,20 @@ public class DSFActionBar: NSView {
 		self.items.append(button)
 	}
 
+	public func isEnabled(_ enabled: Bool, identifier: NSUserInterfaceItemIdentifier) {
+		if let button = self.actionButton(for: identifier) {
+			button.isEnabled = enabled
+			self.needsDisplay = true
+		}
+	}
+
 	public func rename(_ title: String, identifier: NSUserInterfaceItemIdentifier) {
 		if let button = self.actionButton(for: identifier) {
 			button.title = title
 			self.needsDisplay = true
 		}
 	}
+
 
 	private func actionButton(for identifier: NSUserInterfaceItemIdentifier) -> DSFActionBarButton? {
 		let first = self.stack.arrangedSubviews.first(where: { view in view.identifier == identifier })
@@ -279,20 +287,19 @@ public class DSFActionBar: NSView {
 	}
 
 	@objc func showButton(_ sender: NSButton) {
-		let hiddenControls: [NSMenuItem] = self.items.compactMap { item in
-
-			guard let control = item as? NSButton else {
-				return nil
-			}
+		let hiddenControls: [NSMenuItem] = self.items.compactMap { control in
 
 			guard control.isHidden else {
 				return nil
 			}
 
+			let a = control.isEnabled ? control.action : nil
+
 			let mu = NSMenuItem(title: control.title,
-								action: control.action,
+								action: a,
 								keyEquivalent: "")
 			mu.target = control.target
+			mu.isEnabled = control.isEnabled
 
 			if let menu = control.menu {
 				mu.submenu = menu
@@ -300,7 +307,7 @@ public class DSFActionBar: NSView {
 
 			return mu
 		}
-		
+
 		let menu = NSMenu()
 		menu.items = hiddenControls
 
@@ -317,7 +324,7 @@ extension DSFActionBar {
 		v.setHuggingPriority(.defaultHigh, for: .vertical)
 		v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(10), for: .horizontal)
 		// v.edgeInsets = NSEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
-		v.spacing = 4
+		v.spacing = 0
 		v.detachesHiddenViews = false
 		return v
 	}

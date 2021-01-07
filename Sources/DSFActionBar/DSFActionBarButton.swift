@@ -111,6 +111,7 @@ class DSFActionBarButton: NSButton {
 	private var mouseInside: Bool = false
 
 	override func mouseEntered(with event: NSEvent) {
+		guard self.isEnabled else { return }
 		// Highlight with quaternary label color
 		if mouseIsDown {
 			self.buttonLayer.backgroundColor = NSColor.tertiaryLabelColor.cgColor
@@ -127,6 +128,7 @@ class DSFActionBarButton: NSButton {
 	}
 
 	override func mouseDown(with event: NSEvent) {
+		guard self.isEnabled else { return }
 		self.buttonLayer.backgroundColor = NSColor.tertiaryLabelColor.cgColor
 		self.mouseIsDown = true
 	}
