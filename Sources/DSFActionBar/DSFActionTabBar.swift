@@ -44,8 +44,9 @@ public class DSFActionTabBar: DSFActionBar {
 		self.canReorder = false
 	}
 
-	@objc public func add(_ title: String) {
-		let item = super.add(title)
+	/// Add an item to the tab bar.
+	@objc public func add(_ title: String, identifier: NSUserInterfaceItemIdentifier? = nil) -> DSFActionBarItem {
+		let item = super.add(title, identifier: identifier)
 		item.setAction(#selector(clicked(_:)), for: self)
 		if self.itemCount == 1 {
 			// First item.  Select it!
@@ -54,6 +55,7 @@ public class DSFActionTabBar: DSFActionBar {
 			}
 			self.select(button)
 		}
+		return item
 	}
 
 	// MARK: Select tab item
@@ -80,17 +82,7 @@ public class DSFActionTabBar: DSFActionBar {
 		self.select(item)
 	}
 
-	// MARK: Remove tab item
-
-	@objc public override func remove(item: DSFActionBarItem) -> Bool {
-		guard super.remove(item: item) else {
-			return false
-		}
-		self.buttonItems.enumerated().forEach {
-			$0.element.tag = $0.offset
-		}
-		return true
-	}
+	/// Bar button callbacks
 
 	@objc internal func clicked(_ sender: DSFActionBarButton) {
 		self.items.forEach { $0.state = (sender === $0) ? .on : .off }

@@ -33,6 +33,12 @@ import AppKit
 	@objc optional func actionBar(_ actionBar: DSFActionBar, didRightClickOnItem item: DSFActionBarItem)
 }
 
+/// ActionTabBar delegate callbacks
+@objc public protocol DSFActionTabBarDelegate {
+	/// Callback when an item in the tab bar is selected.
+	@objc optional func actionTabBar(_ actionTabBar: DSFActionTabBar, didSelectItem item: DSFActionBarItem, atIndex index: Int)
+}
+
 /// An ActionBar item
 @objc public protocol DSFActionBarItem {
 	/// The item's title
@@ -65,12 +71,6 @@ import AppKit
 
 	/// Block handling
 	var actionBlock: (() -> Void)? { get set }
-}
-
-/// ActionBar delegate callbacks
-@objc public protocol DSFActionTabBarDelegate {
-	/// Callback when the items within an action bar reordered
-	@objc optional func actionTabBar(_ actionTabBar: DSFActionTabBar, didSelectItem item: DSFActionBarItem, atIndex index: Int)
 }
 
 #endif
