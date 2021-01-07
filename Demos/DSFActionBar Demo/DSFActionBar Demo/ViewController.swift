@@ -9,8 +9,8 @@ import Cocoa
 import DSFActionBar
 
 class ViewController: NSViewController {
-
-	@IBOutlet weak var actionBar1: DSFActionBar!
+	@IBOutlet var actionBar1: DSFActionBar!
+	@IBOutlet var actionBar2: DSFActionBar!
 
 	var toggle: Bool = false
 
@@ -19,20 +19,24 @@ class ViewController: NSViewController {
 
 		// Do any additional setup after loading the view.
 
-		actionBar1.add("Jobs", target: self, action: #selector(firstItem(_:)))
-		actionBar1.add("Caterpillar")
-		actionBar1.add("Toggle Fishie", target: self, action: #selector(toggle(_:)))
-		actionBar1.add("Fishie!", identifier: NSUserInterfaceItemIdentifier("fishie"), target: self, action: #selector(fishieItem(_:)))
+		self.actionBar1.add("Jobs", target: self, action: #selector(self.firstItem(_:)))
+		self.actionBar1.add("Caterpillar")
+		self.actionBar1.add("Toggle Fishie", target: self, action: #selector(self.toggle(_:)))
+		self.actionBar1.add("Fishie!", identifier: NSUserInterfaceItemIdentifier("fishie"), target: self, action: #selector(self.fishieItem(_:)))
 
 		let m = NSMenu()
-		m.addItem(withTitle: "first", action: #selector(firstItem(_:)), keyEquivalent: "")
-		m.addItem(withTitle: "second", action: #selector(secondItem(_:)), keyEquivalent: "")
-		m.addItem(withTitle: "third", action: #selector(thirdItem(_:)), keyEquivalent: "")
+		m.addItem(withTitle: "first", action: #selector(self.firstItem(_:)), keyEquivalent: "")
+		m.addItem(withTitle: "second", action: #selector(self.secondItem(_:)), keyEquivalent: "")
+		m.addItem(withTitle: "third", action: #selector(self.thirdItem(_:)), keyEquivalent: "")
 
-		actionBar1.add("Womble", menu: m)
+		self.actionBar1.add("Womble", menu: m)
+
+		self.actionBar2.add("first item")
+		self.actionBar2.add("second item")
+		self.actionBar2.add("third item")
 	}
 
-	@objc func toggle(_ sender: Any) {
+	@objc func toggle(_: Any) {
 		self.toggle.toggle()
 
 		if self.toggle {
@@ -43,29 +47,29 @@ class ViewController: NSViewController {
 			self.actionBar1.setMenu(m, for: NSUserInterfaceItemIdentifier("fishie"))
 		}
 		else {
-			self.actionBar1.setAction(#selector(fishieItem(_:)), for: self, with: NSUserInterfaceItemIdentifier("fishie"))
+			self.actionBar1.setAction(#selector(self.fishieItem(_:)), for: self, with: NSUserInterfaceItemIdentifier("fishie"))
 		}
 	}
 
-	@objc func firstItem(_ sender: Any) {
+	@objc func firstItem(_: Any) {
 		Swift.print("first selected!")
 	}
-	@objc func secondItem(_ sender: Any) {
+
+	@objc func secondItem(_: Any) {
 		Swift.print("second selected!")
 	}
-	@objc func thirdItem(_ sender: Any) {
+
+	@objc func thirdItem(_: Any) {
 		Swift.print("third selected!")
 	}
-	@objc func fishieItem(_ sender: Any) {
+
+	@objc func fishieItem(_: Any) {
 		Swift.print("fishie selected!")
 	}
 
 	override var representedObject: Any? {
 		didSet {
-		// Update the view, if already loaded.
+			// Update the view, if already loaded.
 		}
 	}
-
-
 }
-

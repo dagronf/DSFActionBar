@@ -705,41 +705,95 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="DSFActionBar_Demo" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                    <view key="view" misplaced="YES" id="m2S-Jp-Qdl">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="336"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView placeholderIntrinsicWidth="480" placeholderIntrinsicHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="89X-XX-krb" customClass="DSFActionBar" customModule="DSFActionBar">
-                                <rect key="frame" x="0.0" y="245" width="480" height="25"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="topInset">
-                                        <real key="value" value="4"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="bottomInset">
-                                        <real key="value" value="4"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
-                                        <color key="value" name="underPageBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="leftInset">
-                                        <real key="value" value="4"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </customView>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ukh-3U-XUw">
+                                <rect key="frame" x="0.0" y="192" width="480" height="144"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lVr-ej-9al">
+                                        <rect key="frame" x="6" y="112" width="90" height="24"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Centered" id="BQE-98-oqX">
+                                            <font key="font" metaFont="systemSemibold" size="20"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <customView placeholderIntrinsicWidth="480" placeholderIntrinsicHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="89X-XX-krb" customClass="DSFActionBar" customModule="DSFActionBar">
+                                        <rect key="frame" x="0.0" y="77" width="480" height="25"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="topInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="bottomInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                                                <color key="value" name="underPageBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leftInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="centered" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="12h-Hf-ywu" userLabel="Left Aligned">
+                                        <rect key="frame" x="6" y="43" width="115" height="24"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Left Aligned" id="kyx-1N-KIb">
+                                            <font key="font" metaFont="systemSemibold" size="20"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <customView placeholderIntrinsicWidth="480" placeholderIntrinsicHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="1ut-a5-EdD" customClass="DSFActionBar" customModule="DSFActionBar">
+                                        <rect key="frame" x="0.0" y="8" width="480" height="25"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="topInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="bottomInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                                                <color key="value" name="systemIndigoColor" catalog="System" colorSpace="catalog"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="leftInset">
+                                                <real key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
+                                </subviews>
+                                <edgeInsets key="edgeInsets" left="8" right="8" top="8" bottom="8"/>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="89X-XX-krb" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="lOk-4u-q9R"/>
-                            <constraint firstAttribute="trailing" secondItem="89X-XX-krb" secondAttribute="trailing" id="s1M-UF-Fsm"/>
-                            <constraint firstItem="89X-XX-krb" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="zdd-ID-Zu4"/>
+                            <constraint firstItem="ukh-3U-XUw" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="U5s-Bn-gec"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ukh-3U-XUw" secondAttribute="bottom" constant="192" id="ZSv-4x-MOW"/>
+                            <constraint firstItem="ukh-3U-XUw" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="ilD-y3-3TG"/>
+                            <constraint firstAttribute="trailing" secondItem="ukh-3U-XUw" secondAttribute="trailing" id="vaZ-Z1-hwc"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="actionBar1" destination="89X-XX-krb" id="73I-tN-VxT"/>
+                        <outlet property="actionBar2" destination="1ut-a5-EdD" id="cbg-QW-gbP"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="655"/>
+            <point key="canvasLocation" x="75" y="654.5"/>
         </scene>
     </scenes>
 </document>

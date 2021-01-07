@@ -133,7 +133,7 @@ class DSFActionBarButton: NSButton {
 
 	override func mouseUp(with event: NSEvent) {
 		if mouseInside {
-			self.buttonLayer.backgroundColor = NSColor.tertiaryLabelColor.cgColor
+			self.buttonLayer.backgroundColor = NSColor.quaternaryLabelColor.cgColor
 			_ = self.target?.perform(self.action, with: self)
 			if let menu = self.menu {
 				menu.popUp(positioning: nil, at: NSPoint(x: self.bounds.minX, y: self.bounds.maxY + 8), in: self)

@@ -103,15 +103,10 @@ public class DSFActionBar: NSView {
 
 		self.addSubview(self.stack)
 
-		let constraints = [
-			NSLayoutConstraint(item: self.stack, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0),
-			NSLayoutConstraint(item: self.stack, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0),
-			NSLayoutConstraint(item: self.stack, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0),
-		]
-		self.addConstraints(constraints)
+		// Constraints for the containing stack
+		self.configurePosition()
 
 		// Constraints for the 'more' button
-
 		self.addSubview(self.moreButton)
 		let constraints2 = [
 			NSLayoutConstraint(item: self.moreButton, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0),
@@ -123,7 +118,61 @@ public class DSFActionBar: NSView {
 		self.addConstraints(constraints2)
 
 		self.moreButton.toolTip = self.moreButtonTooltip
+	}
 
+	public override func viewDidMoveToWindow() {
+		super.viewDidMoveToWindow()
+
+		self.configurePosition()
+	}
+
+	// MARK :- Positions
+
+	private var lastC: [NSLayoutConstraint] = []
+
+	func configurePosition() {
+		if self.centered {
+			self.configureCentered()
+		}
+		else {
+			self.configureLeft()
+		}
+	}
+
+	private func configureLeft() {
+		self.removeConstraints(lastC)
+
+		let r = NSLayoutConstraint(item: self.stack, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
+		r.priority = NSLayoutConstraint.Priority(10)
+
+		let constraints = [
+			NSLayoutConstraint(item: self.stack, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: self.stack, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: self.stack, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0),
+			r
+		]
+		self.addConstraints(constraints)
+		self.lastC = constraints
+		self.needsLayout = true
+	}
+
+	private func configureCentered() {
+		self.removeConstraints(lastC)
+
+		let r = NSLayoutConstraint(item: self.stack, attribute: .left, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .left, multiplier: 1, constant: 0)
+
+		let c = NSLayoutConstraint(item: self.stack, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)
+		c.priority = NSLayoutConstraint.Priority(10)
+
+		let constraints = [
+			c,
+			NSLayoutConstraint(item: self.stack, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0),
+			NSLayoutConstraint(item: self.stack, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0),
+			r
+		]
+		self.addConstraints(constraints)
+		self.lastC = constraints
+		self.needsLayout = true
 	}
 
 	public func add(_ title: String,
