@@ -12,6 +12,9 @@ class ViewController: NSViewController {
 	@IBOutlet var actionBar1: DSFActionBar!
 	@IBOutlet var actionBar2: DSFActionBar!
 
+	let CaterpillarIdentifier = NSUserInterfaceItemIdentifier("caterpillar")
+	let FishieIdentifier = NSUserInterfaceItemIdentifier("fishie")
+
 	var toggle: Bool = false
 
 	override func viewDidLoad() {
@@ -20,11 +23,12 @@ class ViewController: NSViewController {
 		// Do any additional setup after loading the view.
 
 		self.actionBar1.add("Jobs", target: self, action: #selector(self.jobItem(_:)))
-		self.actionBar1.add("Caterpillar", identifier: NSUserInterfaceItemIdentifier("caterpillar"), target: self, action: #selector(self.caterpillarItem(_:)))
-		self.actionBar1.add("Toggle Some Items", target: self, action: #selector(self.toggle(_:)))
-		self.actionBar1.add("Fishie!", identifier: NSUserInterfaceItemIdentifier("fishie"), target: self, action: #selector(self.fishieItem(_:)))
 
-		self.actionBar1.isEnabled(false, identifier: NSUserInterfaceItemIdentifier("caterpillar"))
+		self.actionBar1.add("Caterpillar", identifier: CaterpillarIdentifier, target: self, action: #selector(self.caterpillarItem(_:)))
+		self.actionBar1.item(for: CaterpillarIdentifier)?.disabled = true
+
+		self.actionBar1.add("Toggle Some Items", target: self, action: #selector(self.toggle(_:)))
+		self.actionBar1.add("Fishie!", identifier: FishieIdentifier, target: self, action: #selector(self.fishieItem(_:)))
 
 
 		let m = NSMenu()
@@ -44,22 +48,26 @@ class ViewController: NSViewController {
 
 	}
 
-	@objc func toggle(_: Any) {
+	@objc func toggle(_ sender: AnyObject) {
 		self.toggle.toggle()
+
+		guard let fishie = self.actionBar1.item(for: FishieIdentifier),
+			  let caterpillar = self.actionBar1.item(for: CaterpillarIdentifier) else {
+			fatalError()
+		}
 
 		if self.toggle {
 			let m = NSMenu()
 			m.addItem(withTitle: "abc", action: nil, keyEquivalent: "")
 			m.addItem(withTitle: "def", action: nil, keyEquivalent: "")
 			m.addItem(withTitle: "ghi", action: nil, keyEquivalent: "")
-			self.actionBar1.setMenu(m, for: NSUserInterfaceItemIdentifier("fishie"))
+			fishie.menu = m
 		}
 		else {
-			self.actionBar1.setAction(#selector(self.fishieItem(_:)), for: self, with: NSUserInterfaceItemIdentifier("fishie"))
+			fishie.setAction(#selector(self.fishieItem(_:)), for: self)
 		}
 
-		self.actionBar1.isEnabled(self.toggle, identifier: NSUserInterfaceItemIdentifier("caterpillar"))
-
+		caterpillar.disabled = !self.toggle
 	}
 
 	@objc func firstItem(_: Any) {

@@ -11,18 +11,22 @@ import AppKit
 
 @IBDesignable
 public class DSFActionBar: NSView {
+
+	/// The background color for the control
 	@IBInspectable public var backgroundColor: NSColor = .clear {
 		didSet {
-			self.layer?.backgroundColor = self.backgroundColor.cgColor
+			self.needsDisplay = true
 		}
 	}
 
+	/// Tooltip to display on the 'more items' button that appears when the items are clipped
 	@IBInspectable public var moreButtonTooltip: String = NSLocalizedString("More actions…", comment: "Tooltip for the button that appears when there isn't enough space to display all action buttons") {
 		didSet {
 			self.moreButton.toolTip = self.moreButtonTooltip
 		}
 	}
 
+	/// Center the items horizontally within the action bar. Otherwise, left align
 	@IBInspectable public var centered: Bool = false {
 		didSet {
 			self.configurePosition()
@@ -69,7 +73,7 @@ public class DSFActionBar: NSView {
 
 	public var controlSize: NSControl.ControlSize = .regular {
 		didSet {
-			self.items.forEach {
+			self.buttonItems.forEach {
 				$0.controlSize = self.controlSize
 				$0.needsLayout = true
 			}
@@ -77,23 +81,17 @@ public class DSFActionBar: NSView {
 		}
 	}
 
+	// MARK: Private definitions
+
 	private lazy var stack: NSStackView = { self.createStack() }()
-	var items: [NSButton] = []
-
-	lazy var moreButton: NSButton = {
-		let moreButton = NSButton()
-		moreButton.translatesAutoresizingMaskIntoConstraints = false
-		moreButton.isBordered = false
-		moreButton.setButtonType(.momentaryChange)
-		moreButton.image = Self.MoreImage
-		moreButton.imageScaling = .scaleNone
-		moreButton.imagePosition = .imageOnly
-
-		moreButton.target = self
-		moreButton.action = #selector(self.showButton(_:))
-
-		return moreButton
+	private var buttonItems: [DSFActionBarButton] {
+		return self.stack.arrangedSubviews.map { $0 as! DSFActionBarButton }
+	}
+	private lazy var moreButton: NSButton = {
+		return self.createMoreButton()
 	}()
+
+	// MARK: Initialize and cleanup
 
 	override public init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)
@@ -107,9 +105,6 @@ public class DSFActionBar: NSView {
 
 	private func setup() {
 		self.translatesAutoresizingMaskIntoConstraints = false
-
-		self.wantsLayer = true
-		self.layer?.backgroundColor = self.backgroundColor.cgColor
 
 		self.addSubview(self.stack)
 
@@ -130,17 +125,37 @@ public class DSFActionBar: NSView {
 		self.moreButton.toolTip = self.moreButtonTooltip
 	}
 
+	// MARK: Display and layout
+
 	override public func viewDidMoveToWindow() {
 		super.viewDidMoveToWindow()
-
 		self.configurePosition()
 	}
 
-	// MARK: - Positions
+	public override func draw(_ dirtyRect: NSRect) {
+		self.backgroundColor.setFill()
+		self.bounds.fill()
+	}
 
-	private var lastC: [NSLayoutConstraint] = []
+	override public func layout() {
+		super.layout()
 
-	func configurePosition() {
+		var b = self.bounds
+		b.size.width -= 12
+		self.buttonItems.forEach { item in
+			item.isHidden = !b.contains(item.frame)
+		}
+
+		self.moreButton.isHidden = self.buttonItems.first(where: { item in
+			item.isHidden
+		}) == nil ? true : false
+	}
+
+	// MARK: Item positioning
+
+	private var currentPositioningConstraints: [NSLayoutConstraint] = []
+
+	private func configurePosition() {
 		if self.centered {
 			self.configureCentered()
 		}
@@ -150,7 +165,7 @@ public class DSFActionBar: NSView {
 	}
 
 	private func configureLeft() {
-		self.removeConstraints(self.lastC)
+		self.removeConstraints(self.currentPositioningConstraints)
 
 		let r = NSLayoutConstraint(item: self.stack, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
 		r.priority = NSLayoutConstraint.Priority(10)
@@ -162,12 +177,12 @@ public class DSFActionBar: NSView {
 			r,
 		]
 		self.addConstraints(constraints)
-		self.lastC = constraints
+		self.currentPositioningConstraints = constraints
 		self.needsLayout = true
 	}
 
 	private func configureCentered() {
-		self.removeConstraints(self.lastC)
+		self.removeConstraints(self.currentPositioningConstraints)
 
 		let r = NSLayoutConstraint(item: self.stack, attribute: .left, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .left, multiplier: 1, constant: 0)
 
@@ -181,40 +196,16 @@ public class DSFActionBar: NSView {
 			r,
 		]
 		self.addConstraints(constraints)
-		self.lastC = constraints
+		self.currentPositioningConstraints = constraints
 		self.needsLayout = true
 	}
 
-	public func add(_ title: String,
-					identifier: NSUserInterfaceItemIdentifier? = nil,
-					menu: NSMenu? = nil)
-	{
-		let button = DSFActionBarButton(frame: NSZeroRect)
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.title = title
-		button.bezelStyle = .roundRect
-		button.identifier = identifier
-		button.menu = menu
-		button.controlSize = self.controlSize
+	// MARK: Item Discovery
 
-		self.stack.addArrangedSubview(button)
-		self.items.append(button)
+	/// Return an item that matches the provided identifier
+	public func item(for identifier: NSUserInterfaceItemIdentifier) -> DSFActionBarItem? {
+		return self.actionButton(for: identifier)
 	}
-
-	public func isEnabled(_ enabled: Bool, identifier: NSUserInterfaceItemIdentifier) {
-		if let button = self.actionButton(for: identifier) {
-			button.isEnabled = enabled
-			self.needsDisplay = true
-		}
-	}
-
-	public func rename(_ title: String, identifier: NSUserInterfaceItemIdentifier) {
-		if let button = self.actionButton(for: identifier) {
-			button.title = title
-			self.needsDisplay = true
-		}
-	}
-
 
 	private func actionButton(for identifier: NSUserInterfaceItemIdentifier) -> DSFActionBarButton? {
 		let first = self.stack.arrangedSubviews.first(where: { view in view.identifier == identifier })
@@ -224,28 +215,35 @@ public class DSFActionBar: NSView {
 		return nil
 	}
 
-	public func setMenu(_ menu: NSMenu?, for identifier: NSUserInterfaceItemIdentifier) {
-		if let button = actionButton(for: identifier) {
-			button.menu = menu
-			button.action = nil
-			button.target = nil
-			button.updateMenuStatus()
-		}
+	public var allItems: [DSFActionBarItem] {
+		return self.buttonItems.map { $0 as DSFActionBarItem }
 	}
 
-	public func setAction(_ action: Selector, for target: AnyObject, with identifier: NSUserInterfaceItemIdentifier) {
-		if let button = actionButton(for: identifier) {
-			button.menu = nil
-			button.action = action
-			button.target = target
-			button.updateMenuStatus()
-		}
+	// MARK: Add items
+
+	/// Add an item with an (optional) menu
+	public func add(
+		_ title: String,
+		identifier: NSUserInterfaceItemIdentifier? = nil,
+		menu: NSMenu? = nil)
+	{
+		let button = DSFActionBarButton(frame: NSZeroRect)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		button.title = title
+		button.bezelStyle = .roundRect
+		button.identifier = identifier
+		button.menu = menu
+		button.controlSize = self.controlSize
+		button.parent = self
+
+		self.stack.addArrangedSubview(button)
 	}
 
-	public func add(_ title: String,
-					identifier: NSUserInterfaceItemIdentifier? = nil,
-					target: AnyObject,
-					action: Selector)
+	public func add(
+		_ title: String,
+		identifier: NSUserInterfaceItemIdentifier? = nil,
+		target: AnyObject,
+		action: Selector)
 	{
 		let button = DSFActionBarButton(frame: NSZeroRect)
 		button.translatesAutoresizingMaskIntoConstraints = false
@@ -255,9 +253,9 @@ public class DSFActionBar: NSView {
 		button.action = action
 		button.target = target
 		button.controlSize = self.controlSize
+		button.parent = self
 
 		self.stack.addArrangedSubview(button)
-		self.items.append(button)
 	}
 
 	public func remove(identifier: NSUserInterfaceItemIdentifier) {
@@ -271,35 +269,25 @@ public class DSFActionBar: NSView {
 	public func removeAll() {
 		self.stack.arrangedSubviews.forEach { self.stack.removeArrangedSubview($0) }
 	}
+}
 
-	override public func layout() {
-		super.layout()
+// MARK: - 'More items' button handling
 
-		var b = self.bounds
-		b.size.width -= 12
-		self.items.forEach { item in
-			item.isHidden = !b.contains(item.frame)
-		}
-
-		self.moreButton.isHidden = self.items.first(where: { item in
-			item.isHidden
-		}) == nil ? true : false
-	}
-
+extension DSFActionBar {
 	@objc func showButton(_ sender: NSButton) {
-		let hiddenControls: [NSMenuItem] = self.items.compactMap { control in
+		let hiddenControls: [NSMenuItem] = self.allItems.compactMap { control in
 
 			guard control.isHidden else {
 				return nil
 			}
 
-			let a = control.isEnabled ? control.action : nil
+			let a = (control.disabled == false) ? control.action : nil
 
 			let mu = NSMenuItem(title: control.title,
 								action: a,
 								keyEquivalent: "")
 			mu.target = control.target
-			mu.isEnabled = control.isEnabled
+			mu.isEnabled = (control.disabled == false)
 
 			if let menu = control.menu {
 				mu.submenu = menu
@@ -315,6 +303,8 @@ public class DSFActionBar: NSView {
 	}
 }
 
+// MARK: - Stack building
+
 extension DSFActionBar {
 	func createStack() -> NSStackView {
 		let v = NSStackView()
@@ -323,12 +313,13 @@ extension DSFActionBar {
 		v.alignment = .centerY
 		v.setHuggingPriority(.defaultHigh, for: .vertical)
 		v.setContentCompressionResistancePriority(NSLayoutConstraint.Priority(10), for: .horizontal)
-		// v.edgeInsets = NSEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
 		v.spacing = 0
 		v.detachesHiddenViews = false
 		return v
 	}
 }
+
+// MARK: - Interface builder support
 
 public extension DSFActionBar {
 	override func prepareForInterfaceBuilder() {
@@ -341,7 +332,25 @@ public extension DSFActionBar {
 	}
 }
 
+// MARK: - 'More items' button definitions
+
 extension DSFActionBar {
+
+	private func createMoreButton() -> NSButton {
+		let moreButton = NSButton()
+		moreButton.translatesAutoresizingMaskIntoConstraints = false
+		moreButton.isBordered = false
+		moreButton.setButtonType(.momentaryChange)
+		moreButton.image = Self.MoreImage
+		moreButton.imageScaling = .scaleNone
+		moreButton.imagePosition = .imageOnly
+
+		moreButton.target = self
+		moreButton.action = #selector(self.showButton(_:))
+
+		return moreButton
+	}
+
 	static var MoreImage: NSImage = {
 		let im = NSImage(size: NSSize(width: 24, height: 16))
 		im.lockFocus()
@@ -364,6 +373,12 @@ extension DSFActionBar {
 		im.isTemplate = true
 		return im
 	}()
+
+	
+}
+
+extension DSFActionBar: DSFActionBarProtocol {
+	
 }
 
 #endif
