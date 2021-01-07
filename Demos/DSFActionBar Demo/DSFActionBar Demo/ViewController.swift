@@ -40,12 +40,19 @@ class ViewController: NSViewController {
 
 		self.actionBar1.add("Womble", menu: m)
 
+
+		self.actionBar2.actionDelegate = self
 		self.actionBar2.controlSize = .regular
 
-		self.actionBar2.add("first item") { Swift.print("first item selected ") }
-		self.actionBar2.add("second item") { Swift.print("second item selected ") }
-		self.actionBar2.add("third item") { Swift.print("third item selected ") }
-
+		self.actionBar2.add("first item") {
+			Swift.print("first item selected ")
+		}
+		self.actionBar2.add("second item") {
+			Swift.print("second item selected ")
+		}
+		self.actionBar2.add("third item") {
+			Swift.print("third item selected ")
+		}
 
 	}
 
@@ -115,13 +122,35 @@ class ViewController: NSViewController {
 }
 
 extension ViewController: DSFActionBarDelegate {
-	func actionBar(_ actionBar: DSFActionBar, didReorderItems: [DSFActionBarItem]) {
-		
+	func actionBar(_ actionBar: DSFActionBar, didReorderItems items: [DSFActionBarItem]) {
+		guard actionBar === self.actionBar2 else { return }
+		Swift.print("Did reorder items '\(items)'")
 	}
 
 	func actionBar(_ actionBar: DSFActionBar, didRightClickOnItem item: DSFActionBarItem) {
+		guard actionBar === self.actionBar1 else { return }
+
 		Swift.print("Did right-click on item '\(item.title)'")
+		let m = NSMenu()
+		let mi1 = m.addItem(withTitle: "Open in tab", action: #selector(a1(_:)), keyEquivalent: "")
+		mi1.representedObject = item
+		let mi2 = m.addItem(withTitle: "Open in window", action: #selector(a2(_:)), keyEquivalent: "")
+		mi2.representedObject = item
+
+		let pos = self.view.window!.mouseLocationOutsideOfEventStream
+		let ev = actionBar.convert(pos, from: nil)
+		m.popUp(positioning: nil, at: ev, in: actionBar)
+
 	}
 
+	@objc func a1(_ sender: NSMenuItem) {
+		let item = sender.representedObject as! DSFActionBarItem
+		Swift.print(" > Open in tab selected for '\(item.title)'")
+	}
+
+	@objc func a2(_ sender: NSMenuItem) {
+		let item = sender.representedObject as! DSFActionBarItem
+		Swift.print(" > Open in window selected for '\(item.title)'")
+	}
 
 }

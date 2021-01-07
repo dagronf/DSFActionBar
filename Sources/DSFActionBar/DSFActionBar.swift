@@ -28,6 +28,7 @@ internal let DefaultMoreTooltip = NSLocalizedString("More actions…", comment: 
 
 @IBDesignable
 public class DSFActionBar: NSView {
+	// MARK: Delegates
 
 	/// If set, the delegate receives callbacks when the items are reordered in the action bar
 	public weak var actionDelegate: DSFActionBarDelegate? {
@@ -35,6 +36,8 @@ public class DSFActionBar: NSView {
 			self.stack.dragDelegate = (self.actionDelegate == nil) ? nil : self
 		}
 	}
+
+	// MARK: Public properties
 
 	/// The background color for the control (defaults to clear)
 	@IBInspectable public var backgroundColor: NSColor = .clear {
@@ -128,6 +131,7 @@ public class DSFActionBar: NSView {
 
 	deinit {
 		self.actionDelegate = nil
+		self.removeAll()
 	}
 
 	// MARK: Item Discovery
@@ -152,26 +156,22 @@ public class DSFActionBar: NSView {
 		return self.actionButton(index: index)
 	}
 
-	// MARK: Add items
+	// MARK: Add item
 
 	/// Add an item with an (optional) menu
-	@objc public func add(
-		_ title: String,
-		identifier: NSUserInterfaceItemIdentifier? = nil,
-		menu: NSMenu? = nil)
-	{
+	@objc public func add(_ title: String,
+						  identifier: NSUserInterfaceItemIdentifier? = nil,
+						  menu: NSMenu? = nil) {
 		let button = self.createButton(title, identifier)
 		button.menu = menu
 		self.stack.addArrangedSubview(button)
 	}
 
 	/// Add a new button item using a target/selector
-	@objc public func add(
-		_ title: String,
-		identifier: NSUserInterfaceItemIdentifier? = nil,
-		target: AnyObject,
-		action: Selector)
-	{
+	@objc public func add(_ title: String,
+						  identifier: NSUserInterfaceItemIdentifier? = nil,
+						  target: AnyObject,
+						  action: Selector) {
 		let button = self.createButton(title, identifier)
 		button.action = action
 		button.target = target
@@ -179,17 +179,27 @@ public class DSFActionBar: NSView {
 	}
 
 	/// Add a new button item, using a callback block
-	@objc public func add(
-		_ title: String,
-		identifier: NSUserInterfaceItemIdentifier? = nil,
-		block: @escaping () -> Void)
-	{
+	@objc public func add(_ title: String,
+						  identifier: NSUserInterfaceItemIdentifier? = nil,
+						  block: @escaping () -> Void) {
 		let button = self.createButton(title, identifier)
 		button.actionBlock = block
 		self.stack.addArrangedSubview(button)
 	}
 
-	// MARK: Remove items
+	// MARK: Insert item
+
+	/// Adds an item to the action bar at a specific index.
+	@objc public func insert(at index: Int,
+							 title: String,
+							 identifier: NSUserInterfaceItemIdentifier? = nil) -> DSFActionBarItem
+	{
+		let button = self.createButton(title, identifier)
+		self.stack.insertArrangedSubview(button, at: index)
+		return button
+	}
+
+	// MARK: Remove item(s)
 
 	/// Remove a item from the action bar
 	@objc public func remove(item: DSFActionBarItem) -> Bool {
@@ -229,7 +239,7 @@ public class DSFActionBar: NSView {
 
 	/// The 'More Items' button
 	lazy var moreButton: NSButton = {
-		return self.createMoreButton()
+		self.createMoreButton()
 	}()
 
 	// Constraints for positioning

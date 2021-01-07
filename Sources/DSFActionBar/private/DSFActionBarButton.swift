@@ -26,7 +26,6 @@ import AppKit
 
 @IBDesignable
 class DSFActionBarButton: NSButton {
-
 	// MARK: - Init and setup
 
 	var parent: DSFActionBarProtocol!
@@ -55,7 +54,7 @@ class DSFActionBarButton: NSButton {
 	}
 
 	private lazy var buttonLayer: CALayer = {
-		return self.layer!
+		self.layer!
 	}()
 
 	// MARK: - Cleanup
@@ -123,7 +122,7 @@ class DSFActionBarButton: NSButton {
 
 	// MARK: - Tracking Area
 
-	private var trackingArea: NSTrackingArea? = nil
+	private var trackingArea: NSTrackingArea?
 	override open func updateTrackingAreas() {
 		super.updateTrackingAreas()
 
@@ -134,7 +133,7 @@ class DSFActionBarButton: NSButton {
 			rect: self.bounds,
 			options: [
 				.mouseEnteredAndExited,
-				.activeInActiveApp
+				.activeInActiveApp,
 			],
 			owner: self,
 			userInfo: nil
@@ -146,6 +145,7 @@ class DSFActionBarButton: NSButton {
 
 	private var mouseIsDown: Bool = false
 	private var mouseInside: Bool = false
+	private var mouseDragLocationX: CGFloat?
 
 	var hoverColor: NSColor {
 		return UsingEffectiveAppearance(of: self) {
@@ -161,10 +161,10 @@ class DSFActionBarButton: NSButton {
 		}
 	}
 
-	override func mouseEntered(with event: NSEvent) {
+	override func mouseEntered(with _: NSEvent) {
 		guard self.isEnabled else { return }
 		// Highlight with quaternary label color
-		if mouseIsDown {
+		if self.mouseIsDown {
 			self.buttonLayer.backgroundColor = self.pressedColor.cgColor
 		}
 		else {
@@ -173,19 +173,35 @@ class DSFActionBarButton: NSButton {
 		self.mouseInside = true
 	}
 
-	override func mouseExited(with event: NSEvent) {
+	override func mouseExited(with _: NSEvent) {
 		self.buttonLayer.backgroundColor = nil
 		self.mouseInside = false
 	}
 
-	override func mouseDown(with event: NSEvent) {
+	override func mouseDown(with _: NSEvent) {
 		guard self.isEnabled else { return }
 		self.buttonLayer.backgroundColor = self.pressedColor.cgColor
 		self.mouseIsDown = true
 	}
 
-	override func mouseUp(with event: NSEvent) {
-		if mouseInside {
+	override func mouseDragged(with event: NSEvent) {
+		let location = convert(event.locationInWindow, from: nil)
+		if self.mouseDragLocationX == nil {
+			self.mouseDragLocationX = location.x
+		}
+		else if abs(self.mouseDragLocationX! - location.x) < 10 {
+			// Do nothing. Need to be sticky to avoid accidental drags
+		}
+		else {
+			// Let the next responder up the chain handle it (should be the action bar!)
+			self.mouseInside = false
+			self.mouseDragLocationX = nil
+			super.mouseDragged(with: event)
+		}
+	}
+
+	override func mouseUp(with _: NSEvent) {
+		if self.mouseInside {
 			self.buttonLayer.backgroundColor = self.hoverColor.cgColor
 			if let t = self.target {
 				_ = t.perform(self.action, with: self)
@@ -203,14 +219,12 @@ class DSFActionBarButton: NSButton {
 		self.mouseIsDown = false
 	}
 
-	override func rightMouseDown(with event: NSEvent) {
+	override func rightMouseDown(with _: NSEvent) {
 		self.parent?.rightClick(for: self)
 	}
-
 }
 
 extension DSFActionBarButton: DSFActionBarItem {
-
 	var position: CGRect {
 		return self.parent.rect(for: self)
 	}
