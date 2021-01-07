@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -716,7 +717,7 @@
                                         <rect key="frame" x="0.0" y="333" width="601" height="50"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
-                                                <color key="value" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="value" name="KeychainTabsBackgroundColor"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </customView>
@@ -937,4 +938,9 @@
             <point key="canvasLocation" x="75.5" y="741"/>
         </scene>
     </scenes>
+    <resources>
+        <namedColor name="KeychainTabsBackgroundColor">
+            <color red="0.58105844259999995" green="0.12855249639999999" blue="0.57453137639999996" alpha="0.22371328343226257" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
 </document>
