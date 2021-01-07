@@ -74,6 +74,11 @@ extension MyViewController: DSFActionTabBarDelegate {
 	}
 }
 ```
+
+# Demo
+
+You can find some demo apps in the `Demos` subfolder.
+
 # Installation
 
 ## Swift Package Manager

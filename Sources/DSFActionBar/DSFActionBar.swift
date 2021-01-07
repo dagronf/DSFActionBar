@@ -46,6 +46,13 @@ public class DSFActionBar: NSView {
 		}
 	}
 
+	@IBInspectable public var itemSpacing: CGFloat = 0 {
+		didSet {
+			self.stack.spacing = self.itemSpacing
+			self.stack.needsLayout = true
+		}
+	}
+
 	/// Tooltip to display on the 'more items' button that appears when the items are clipped
 	@IBInspectable public var moreButtonTooltip: String = DefaultMoreTooltip {
 		didSet {

@@ -45,6 +45,7 @@ public class DSFActionTabBar: DSFActionBar {
 	}
 
 	/// Add an item to the tab bar.
+	@discardableResult
 	@objc public func add(_ title: String, identifier: NSUserInterfaceItemIdentifier? = nil) -> DSFActionBarItem {
 		let item = super.add(title, identifier: identifier)
 		item.setAction(#selector(clicked(_:)), for: self)
