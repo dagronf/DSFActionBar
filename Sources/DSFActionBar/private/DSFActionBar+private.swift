@@ -198,8 +198,14 @@ extension DSFActionBar {
 			control.state = .on
 		}
 
-		// Force the action
-		_ = control.target?.perform(control.action, with: control)
+		if let block = control.actionBlock {
+			// If the button has a block action, call it.
+			block()
+		}
+		else {
+			// Force the action
+			_ = control.target?.perform(control.action, with: control)
+		}
 	}
 
 }

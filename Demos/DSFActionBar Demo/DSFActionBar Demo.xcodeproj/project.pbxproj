@@ -17,6 +17,8 @@
 		232681D125A7BDFE002E2A1C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 232681D025A7BDFE002E2A1C /* Assets.xcassets */; };
 		232681D425A7BDFE002E2A1C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232681D225A7BDFE002E2A1C /* Main.storyboard */; };
 		232681DD25A7BE20002E2A1C /* DSFActionBar in Frameworks */ = {isa = PBXBuildFile; productRef = 232681DC25A7BE20002E2A1C /* DSFActionBar */; };
+		23F1282625A834CC0003CABE /* SafariStyleActionBarWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F1282425A834CC0003CABE /* SafariStyleActionBarWindowController.swift */; };
+		23F1282725A834CC0003CABE /* SafariStyleActionBarWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23F1282525A834CC0003CABE /* SafariStyleActionBarWindowController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		232681D325A7BDFE002E2A1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		232681D525A7BDFE002E2A1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		232681D625A7BDFE002E2A1C /* Simple_Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Simple_Demo.entitlements; sourceTree = "<group>"; };
+		23F1282425A834CC0003CABE /* SafariStyleActionBarWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariStyleActionBarWindowController.swift; sourceTree = "<group>"; };
+		23F1282525A834CC0003CABE /* SafariStyleActionBarWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SafariStyleActionBarWindowController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +110,8 @@
 				232681D225A7BDFE002E2A1C /* Main.storyboard */,
 				232681D525A7BDFE002E2A1C /* Info.plist */,
 				232681D625A7BDFE002E2A1C /* Simple_Demo.entitlements */,
+				23F1282425A834CC0003CABE /* SafariStyleActionBarWindowController.swift */,
+				23F1282525A834CC0003CABE /* SafariStyleActionBarWindowController.xib */,
 			);
 			path = "Simple Demo";
 			sourceTree = "<group>";
@@ -204,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				232681D125A7BDFE002E2A1C /* Assets.xcassets in Resources */,
+				23F1282725A834CC0003CABE /* SafariStyleActionBarWindowController.xib in Resources */,
 				232681D425A7BDFE002E2A1C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,6 +231,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23F1282625A834CC0003CABE /* SafariStyleActionBarWindowController.swift in Sources */,
 				232681CF25A7BDFD002E2A1C /* ViewController.swift in Sources */,
 				232681CD25A7BDFD002E2A1C /* AppDelegate.swift in Sources */,
 			);

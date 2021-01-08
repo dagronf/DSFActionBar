@@ -10,11 +10,16 @@ import Cocoa
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-	
+	let safariStyle = SafariStyleActionBarWindowController()
 
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		// Insert code here to initialize your application
+
+		safariStyle.loadWindow()
+		safariStyle.showWindow(self)
+		safariStyle.setup()
+
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
