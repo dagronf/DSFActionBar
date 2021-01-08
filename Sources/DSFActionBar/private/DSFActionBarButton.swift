@@ -72,7 +72,9 @@ class DSFActionBarButton: NSButton {
 
 	override var intrinsicContentSize: NSSize {
 		var sz = super.intrinsicContentSize
-		sz.width -= 4
+		if #available(macOS 11, *) {
+			sz.width -= 4
+		}
 		return sz
 	}
 
