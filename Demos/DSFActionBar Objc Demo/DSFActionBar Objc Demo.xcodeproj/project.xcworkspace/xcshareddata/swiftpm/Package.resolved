@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "DSFActionBar",
+        "repositoryURL": "https://github.com/dagronf/DSFActionBar",
+        "state": {
+          "branch": null,
+          "revision": "405a92dd46bef36400cf49f93c668f10316759be",
+          "version": "0.9.7"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
