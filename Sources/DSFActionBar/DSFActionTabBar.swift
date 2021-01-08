@@ -29,12 +29,12 @@ public class DSFActionTabBar: DSFActionBar {
 
 	@objc public weak var actionTabDelegate: DSFActionTabBarDelegate?
 
-	public override init(frame frameRect: NSRect) {
+	@objc public override init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)
 		self.configure()
 	}
 
-	public required init?(coder: NSCoder) {
+	@objc public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 		self.configure()
 	}

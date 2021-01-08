@@ -126,12 +126,12 @@ public class DSFActionBar: NSView {
 
 	// MARK: Initialize and cleanup
 
-	override public init(frame frameRect: NSRect) {
+	@objc override public init(frame frameRect: NSRect) {
 		super.init(frame: frameRect)
 		self.setup()
 	}
 
-	public required init?(coder: NSCoder) {
+	@objc public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 		self.setup()
 	}
