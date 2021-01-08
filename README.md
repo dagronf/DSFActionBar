@@ -1,6 +1,10 @@
 # DSFActionBar
 
-An editable, draggable bar of buttons and menus similar to Safari's Favorites bar with overflow support.
+<a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/safari-style-tab-bar-expanded.png?raw=true"><img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/safari-style-tab-bar-expanded.png?raw=true" width="690"></a>
+
+<a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/keychain-style-tab-bar-complete.png?raw=true"><img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/keychain-style-tab-bar-complete.png?raw=true" width="490"></a>
+
+An editable, draggable bar of buttons and menus similar to Safari's Favorites bar with overflow support for macOS (10.11 and later).
 
 ![](https://img.shields.io/github/v/tag/dagronf/DSFActionBar) ![](https://img.shields.io/badge/macOS-10.11+-red) ![](https://img.shields.io/badge/Swift-5.3-orange.svg)
 ![](https://img.shields.io/badge/License-MIT-lightgrey) [![](https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat)](https://swift.org/package-manager)
@@ -13,9 +17,15 @@ A collection of buttons (items).  If not enough space is available to display al
 
 This control was inspired by Safari's favorites bar.
 
+<a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/safari-style-tab-bar-expanded.png?raw=true"><img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/safari-style-tab-bar-expanded.png?raw=true" width="600"></a>
+<a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/safari-style-tab-bar-overflow.png?raw=true"><img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/safari-style-tab-bar-overflow.png?raw=true" width="300"></a>
+
+<a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/safari-style.mp4?raw=true">Demo Movie</a>
+
 ### Features
 
 * Center or left-align the item collection
+* Set the background color
 * Add, remove, rename items
 * Enable/Disable items
 * Right-click on item detection
@@ -45,9 +55,18 @@ A collection of buttons that act as a tab bar.  If not enough space is available
 
 For an example of this, look at detail pane in KeyChain Access - "All Items", "Password" etc. It is this KeyChain Access app that partially inspired this control - as you will notice that if you resize the window smaller than the tabs it just draws off-screen)
 
+### Screenshots
+
+<a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/keychain-style-tab-bar-complete.png?raw=true"><img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/keychain-style-tab-bar-complete.png?raw=true" width="600"></a>
+
+<a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/keychain-style-tab-bar-overflow.png?raw=true"><img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFActionBar/keychain-style-tab-bar-overflow.png?raw=true" width="500"></a>
+
+<a href="https://github.com/dagronf/dagronf.github.io/raw/master/art/projects/DSFActionBar/keychain-style.mp4">Demo Movie</a>
+
 ### Features
 
 * Center or left-align the item collection
+* Set the background color
 * Add, remove, rename items
 * Enable/Disable items
 * Overflow support when the available space is too narrow
@@ -89,13 +108,13 @@ Add `https://github.com/dagronf/DSFActionBar` to your project.
 
 ## Via Interface Builder
 
-* Add a custom NSView using Interface Builder, then change the class type to `DSFSearchField`.
-* If you want to save the recent searches list, set `Autosave` in the Attributes Inspector of Interface Builder to a unique string for your project.
+* Add a custom NSView using Interface Builder, then change the class type to `DSFActionBar` or `DSFActionTabBar` as needed.
 
 ## Programatically
 
 ```swift
-let searchField = DSFActionBar(frame: rect)
+let actionBar = DSFActionBar(frame: rect)
+let tabBar = DSFActionTabBar(frame: rect)
 ```
 
 # Known issues
