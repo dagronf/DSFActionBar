@@ -27,7 +27,7 @@ import AppKit
 /// ActionBar delegate callbacks
 @objc public protocol DSFActionBarDelegate {
 	/// Callback when the items within an action bar reordered
-	@objc optional func actionBar(_ actionBar: DSFActionBar, didReorderItems: [DSFActionBarItem])
+	@objc optional func actionBar(_ actionBar: DSFActionBar, didReorderItems items: [DSFActionBarItem])
 
 	/// Callback when an item is right-clicked on
 	@objc optional func actionBar(_ actionBar: DSFActionBar, didRightClickOnItem item: DSFActionBarItem)
