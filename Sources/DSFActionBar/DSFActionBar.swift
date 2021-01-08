@@ -114,7 +114,7 @@ public class DSFActionBar: NSView {
 	}
 
 	/// The size of the control
-	public var controlSize: NSControl.ControlSize = .small {
+	@objc public var controlSize: NSControl.ControlSize = .small {
 		didSet {
 			self.buttonItems.forEach {
 				$0.controlSize = self.controlSize
