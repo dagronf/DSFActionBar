@@ -246,7 +246,7 @@ public class DSFActionBar: NSView {
 
 	/// Remove all the items from the action bar
 	@objc public func removeAll() {
-		self.stack.arrangedSubviews.forEach { self.stack.removeArrangedSubview($0) }
+		self.stack.arrangedSubviews.forEach { $0.removeFromSuperview() }
 		self.stack.needsLayout = true
 	}
 
