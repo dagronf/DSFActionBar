@@ -83,12 +83,27 @@ public class DSFActionTabBar: DSFActionBar {
 		self.select(item)
 	}
 
+	/// Returns the currently selected tab.  If no tab is selected (error?) returns -1
+	@objc public var selectedTab: Int {
+		if let item = self.items.enumerated().first (where: { item in
+			return item.element.state == .on
+		}) {
+			return item.offset
+		}
+		return -1
+	}
+
 	/// Bar button callbacks
 
 	@objc internal func clicked(_ sender: DSFActionBarButton) {
 		self.items.forEach { $0.state = (sender === $0) ? .on : .off }
 
-		self.actionTabDelegate?.actionTabBar?(self, didSelectItem: sender, atIndex: sender.tag)
+		/// Notify the delegate on the main queue
+		DispatchQueue.main.async { [weak self] in
+			guard let `self` = self else { return }
+			self.actionTabDelegate?.actionTabBar?(self, didSelectItem: sender, atIndex: sender.tag)
+		}
+
 	}
 
 }

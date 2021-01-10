@@ -178,7 +178,7 @@ public class DSFActionBar: NSView {
 		let button = self.createButton(title, identifier)
 		button.menu = menu
 		self.stack.addArrangedSubview(button)
-		self.updateTags()
+		self.updateAfterTabChange()
 		return button
 	}
 
@@ -192,7 +192,7 @@ public class DSFActionBar: NSView {
 		button.action = action
 		button.target = target
 		self.stack.addArrangedSubview(button)
-		self.updateTags()
+		self.updateAfterTabChange()
 		return button
 	}
 
@@ -204,7 +204,7 @@ public class DSFActionBar: NSView {
 		let button = self.createButton(title, identifier)
 		button.actionBlock = block
 		self.stack.addArrangedSubview(button)
-		self.updateTags()
+		self.updateAfterTabChange()
 		return button
 	}
 
@@ -217,7 +217,7 @@ public class DSFActionBar: NSView {
 	{
 		let button = self.createButton(title, identifier)
 		self.stack.insertArrangedSubview(button, at: index)
-		self.updateTags()
+		self.updateAfterTabChange()
 		return button
 	}
 
@@ -227,7 +227,7 @@ public class DSFActionBar: NSView {
 	@objc public func remove(item: DSFActionBarItem) -> Bool {
 		if let itemButton = item as? DSFActionBarButton {
 			self.stack.removeArrangedSubview(itemButton)
-			self.updateTags()
+			self.updateAfterTabChange()
 			return true
 		}
 		else {
@@ -240,7 +240,7 @@ public class DSFActionBar: NSView {
 		if let button = self.actionButton(for: identifier) {
 			self.stack.removeArrangedSubview(button)
 			self.stack.needsLayout = true
-			self.updateTags()
+			self.updateAfterTabChange()
 		}
 	}
 

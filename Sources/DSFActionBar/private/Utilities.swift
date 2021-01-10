@@ -39,7 +39,7 @@ extension NSColor {
 	/// - Returns: black or white depending on which provides the greatest contrast to this color
 	func flatContrastColor(defaultColor: NSColor = .textColor) -> NSColor {
 		if let rgbColor = self.usingColorSpace(.genericRGB),
-			rgbColor != NSColor.clear {
+		   rgbColor != NSColor.clear {
 			let r = 0.299 * rgbColor.redComponent
 			let g = 0.587 * rgbColor.greenComponent
 			let b = 0.114 * rgbColor.blueComponent
@@ -47,6 +47,16 @@ extension NSColor {
 			return (avgGray >= 0.45) ? .white : .black
 		}
 		return defaultColor
+	}
+}
+
+/// Convenience function for optionally updating a value
+/// - Parameters:
+///   - result: The property to optionally update if 'val' is not equal to its value
+///   - val: The value to check against
+@inlinable internal func UpdateIfNotEqual<T>(_ result: inout T, _ val: T) where T: Equatable {
+	if result != val {
+		result = val
 	}
 }
 

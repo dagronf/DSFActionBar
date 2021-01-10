@@ -96,7 +96,7 @@ public extension DSFActionBar {
 		var b = self.bounds
 		b.size.width -= 12
 		self.buttonItems.forEach { item in
-			item.isHidden = !b.contains(item.frame)
+			item.isHidden = b.maxX < item.frame.maxX
 		}
 
 		self.moreButton.isHidden = self.buttonItems.first(where: { item in
@@ -302,6 +302,11 @@ internal extension DSFActionBar {
 		button.controlSize = self.controlSize
 
 		return button
+	}
+
+	func updateAfterTabChange() {
+		self.updateTags()
+		self.needsLayout = true
 	}
 }
 
