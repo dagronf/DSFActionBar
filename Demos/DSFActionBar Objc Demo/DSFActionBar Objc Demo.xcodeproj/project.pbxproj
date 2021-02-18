@@ -340,7 +340,7 @@
 			repositoryURL = "https://github.com/dagronf/DSFActionBar";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.5;
+				minimumVersion = 1.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

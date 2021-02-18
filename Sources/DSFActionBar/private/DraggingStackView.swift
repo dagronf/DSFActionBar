@@ -164,11 +164,18 @@ internal class DraggingStackView: NSStackView {
 						layer.position = NSPoint(x: layer.view.frame.midX, y: layer.view.frame.midY)
 					}
 
+					CATransaction.setCompletionBlock {
+						// Bug: https://github.com/dagronf/DSFActionBar/issues/1
+						// During the animation, the new view under the cursor can trigger a cursor reset.  As we are still
+						// dragging, then force the cursor back to what we want.
+						NSCursor.closedHand.set()
+					}
+
 					CATransaction.commit()
 				}
 			} else {
 				view.mouseUp(with: event)
-				NSCursor.pop()
+				NSCursor.arrow.set()
 				stop.pointee = true
 				self.dragDelegate?.stackViewDidReorder()
 			}
